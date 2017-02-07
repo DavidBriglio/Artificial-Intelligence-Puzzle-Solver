@@ -1,19 +1,17 @@
 from node import Node
-
+#TODO: Fix consistancy of tabs/spaces
 class BridgeAndTorchGame:
 
-	bridgeSide1 = []
-	bridgeSide2 = []
-	torchOnSide1 = True
-	ai = None
-
+    currentNode = None
+    ai = None
+    
 	def __init__(self, newPersonSet, newAi):
-		self.bridgeSide1 = newPersonSet
+		self.currentNode = Node({"bridgeSide1":newPersonSet, "bridgeSide2":[], "torchOnSide1":True}, None)
 		self.ai = newAi
 
-	def makeMove(self, person1, person2):
-		side = self.bridgeSide1 if self.torchOnSide1 else self.bridgeSide2
-		side2 = self.bridgeSide2 if self.torchOnSide1 else self.bridgeSide1
+	def makeMove(self, node, person1, person2):
+		side = node.state["bridgeSide1"] if node.state["torchOnSide1"] else node.state["bridgeSide2"]
+		side2 = node.state["bridgeSide2"] if node.state["torchOnSide1"] else node.state["bridgeSide1"]
 		moveMade = False
 		if person1 != None and person1 != '' and person1 in side:
 			side2.append(person1)
@@ -26,14 +24,14 @@ class BridgeAndTorchGame:
 			moveMade = True
 
 		if moveMade == True:
-			self.torchOnSide1 = self.torchOnSide1 == False
+			node.state["torchOnSide1"] = node.state["torchOnSide1"] == False
 
-		self.bridgeSide1 = side if self.torchOnSide1 else side2
-		self.bridgeSide2 = side2 if self.torchOnSide1 else side
+		node.state["bridgeSide1"] = side if node.state["torchOnSide1"] else side2
+		node.state["bridgeSide2"] = side2 if node.state["torchOnSide1"] else side
+		return node
 
 	def printBoard(self):
-		print("Side1: " + str(self.bridgeSide1))
-		print("Side2: " + str(self.bridgeSide2))
+		print("Current Node: " + str(self.currentNode))
 
 	def userGameLoop(self):
 		endGame = False
@@ -50,7 +48,7 @@ class BridgeAndTorchGame:
 			else:
 				p2 = int(p2)
 
-			self.makeMove(p1, p2)
+			self.makeMove(self.currentNode, p1, p2)
 			self.printBoard()
 			endGame = self.checkGameEnd()
 			if endGame:
@@ -60,7 +58,7 @@ class BridgeAndTorchGame:
 		endGame = True
 		while endGame == False:
 			m1, m2 = self.ai.getMove()
-			self.makeMove(m1, m2)
+			self.makeMove(self.currentNode, m1, m2)
 			self.printBoard()
 			endGame = self.checkGameEnd()
 			if endGame:
@@ -72,14 +70,14 @@ class BridgeAndTorchGame:
 	def getExpand(self, node):
 		options = []
 		possibleNodes = []
-		if self.torchOnSide1:
-			options = self.getCombinations(self.bridgeSide1)
+		if node.state["torchOnSide1"]:
+			options = self.getCombinations(node.state["bridgeSide1"])
 		else:
-			options = self.getCombinations(self.bridgeSide2)
+			options = self.getCombinations(node.state["bridgeSide2"])
 
-		#TODO: FIX - This is not the state
+		#TODO: FIX v
 		for option in options:
-			possibleNodes.append(Node(option, node))
+			possibleNodes.append(Node(self.makeMoveOnNode(node, option[0], option[1]), node))
 
 		return possibleNodes
 
@@ -105,4 +103,4 @@ if __name__ == "__main__":
 	# game.userGameLoop()
 	# #game.aiGameLoop()
 	game = BridgeAndTorchGame([1,2,3,4], None)
-	print(game.getExpand(Node([1,2,3,4], None)))
+	print(game.getExpand(Node({"bridgeSide1":[1,2,3,4], "bridgeSide2":[], "torchOnSide1":True}, None)))

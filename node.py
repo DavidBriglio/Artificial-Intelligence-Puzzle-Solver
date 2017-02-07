@@ -1,7 +1,7 @@
 
 class Node:
 
-    state = None
+    state = {}
     depth = 0
     parent = None
     action = None
@@ -10,8 +10,11 @@ class Node:
     def __init__(self, state, parent):
         self.state = state
         self.parent = parent
-        self.depth = parent.depth + 1
-        #self.cost = self.depth
+        if self.parent != None:
+            self.depth = self.parent.depth + 1
+        else:
+            self.depth = 0
+		#self.cost = self.depth
 
     def __repr__(self):
         #return str(self.state) + ", " + str(self.depth) + ", " + str(self.action) + ", " + str(self.cost)

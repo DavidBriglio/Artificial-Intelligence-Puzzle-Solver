@@ -6,3 +6,6 @@ class BfsAi:
 
     def __init__(self):
         #
+	
+	def makeMove(self):
+		#

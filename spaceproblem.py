@@ -12,6 +12,12 @@ class SpaceProblemGame:
         random.seed(datetime.now())
         self.setupGame()
 
+	def getWinningState(self):
+		#Initialize the state
+		#state = [[0 for x in range(self.width)] for y in range(self.height)]
+		return [[1,2,3],[8,0,4],[7,6,5]] #TODO: put in logic
+		
+	
     def setupGame(self):
         numberCount = (self.width * self.height) - self.spaceCount
         tempArray = []
@@ -72,11 +78,11 @@ class SpaceProblemGame:
         self.printBoard()
 
 if __name__ == "__main__":
-    w = input("Width: ")
-    l = input("Length: ")
-    s = input("Spaces: ")
-    game = SpaceProblemGame(w,l,s,None)
-    #game = SpaceProblemGame(3,3,1,None)
+    #w = input("Width: ")
+    #l = input("Length: ")
+    #s = input("Spaces: ")
+    #game = SpaceProblemGame(w,l,s,None)
+    game = SpaceProblemGame(3,3,1,None)
     game.printBoard()
     game.userGameLoop()
     #game.aiGameLoop()

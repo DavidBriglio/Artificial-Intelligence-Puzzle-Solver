@@ -6,3 +6,6 @@ class DfsAi:
 
     def __init__(self):
         #
+	
+	def makeMove(self):
+		#
