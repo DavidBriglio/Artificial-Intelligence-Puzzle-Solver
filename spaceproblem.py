@@ -62,6 +62,22 @@ class SpaceProblemGame:
             self.swap(node, px, py, px - 1, py + 1)
         elif direction == "downright" and px + 1 <= width and py + 1 <= height and (node.state["board"][py + 1][px + 1] == 0 or isBlankSpace):
             self.swap(node, px, py, px + 1, py + 1)
+        elif direction == "hrightup" and px + 2 <= width and py - 1 >= 0:
+            self.swap(node, px, py, px + 2, py - 1)
+        elif direction == "hleftup" and px - 2 >= 0 and py - 1 >= 0:
+            self.swap(node, px, py, px - 2, py - 1)
+        elif direction == "hrightdown" and px + 2 <= width and py + 1 <= height:
+            self.swap(node, px, py, px + 1, py + 1)
+        elif direction == "hleftdown" and px - 2 >= 0 and py + 1 <= height:
+            self.swap(node, px, py, px - 2, py + 1)
+        elif direction == "hupright" and px + 1 <= width and py - 2 >= 0:
+            self.swap(node, px, py, px + 1, py - 2)
+        elif direction == "hupleft" and px - 1 >= 0 and py - 2 >= 0:
+            self.swap(node, px, py, px - 1, py - 2)
+        elif direction == "hdownright" and px + 1 <= width and py + 2 <= height:
+            self.swap(node, px, py, px + 1, py + 2)
+        elif direction == "hdownleft" and px - 1 >= 0 and py + 2 <= height:
+            self.swap(node, px, py, px - 1, py + 2)
         else:
             print("Invalid Move.")
 
