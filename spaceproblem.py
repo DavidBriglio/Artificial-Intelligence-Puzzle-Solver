@@ -172,17 +172,26 @@ class SpaceProblemGame:
             print("Invalid Input.")
         self.printBoard(self.currentNode)
 
+    def getCondensedNode(self, node):
+        returnString = ""
+        for rowIndex in range(0, node.state["height"]):
+            for colIndex in range(0, node.state["width"]):
+                returnString += str(node.state["board"][rowIndex][colIndex])
+        return returnString
+
 if __name__ == "__main__":
     #w = input("Width: ")
     #l = input("Length: ")
     #s = input("Spaces: ")
     #game = SpaceProblemGame(w,l,s,None)
     game = SpaceProblemGame(3,3,1,None)
-    print("Current Board: ")
-    game.printBoard(game.currentNode)
-    nodes = game.expandNodes(game.currentNode)
-    for node in nodes:
-        print("Possible Move: ")
-        print(game.printBoard(node))
+    # print("Current Board: ")
+    # game.printBoard(game.currentNode)
+    # nodes = game.expandNodes(game.currentNode)
+    # for node in nodes:
+    #     print("Possible Move: ")
+    #     print(game.printBoard(node))
     #game.userGameLoop()
     #game.aiGameLoop()
+
+    print(game.getCondensedNode(Node({"board":[[1,2,3],[4,5,6],[7,8,0]], "width":3, "height":3}, None)))

@@ -1,5 +1,6 @@
 import copy
 from node import Node
+from BFS import BfsAi
 
 #TODO: Fix consistancy of tabs/spaces
 class BridgeAndTorchGame:
@@ -7,8 +8,10 @@ class BridgeAndTorchGame:
     currentNode = None
     ai = None
 
-    def __init__(self, newPersonSet, newAi):
+    def __init__(self, newPersonSet):
         self.currentNode = Node({"bridgeSide1":newPersonSet, "bridgeSide2":[], "torchOnSide1":True}, None)
+
+    def setAi(self, newAi):
         self.ai = newAi
 
     def makeMove(self, node, person1, person2):
@@ -53,25 +56,30 @@ class BridgeAndTorchGame:
                 print("Game End")
 
     def aiGameLoop(self):
-        endGame = True
+        endGame = False
         while endGame == False:
-            m1, m2 = self.ai.getMove()
-            self.makeMove(self.currentNode, m1, m2)
-            self.printBoard()
-            endGame = self.checkGameEnd()
+            print("Asking AI for move.")
+            node = self.ai.makeMove()
+            if node == None:
+                print("AI found no solution.")
+                endGame = True
+            else:
+                print("AI move:")
+                self.printState(node)
+                endGame = self.checkGameEnd(node)
             if endGame:
-                print("Game End")
+                print("Game End.")
 
-    def checkGameEnd(self):
-        return self.bridgeSide1 == []
+    def checkGameEnd(self, node):
+        return node.state["bridgeSide1"] == []
 
     def expandNodes(self, node):
         options = []
         possibleNodes = []
         if node.state["torchOnSide1"]:
-            options = self.getCombinations(node.state["bridgeSide1"])
+            options = self.getMoves(node.state["bridgeSide1"])
         else:
-            options = self.getCombinations(node.state["bridgeSide2"])
+            options = self.getMoves(node.state["bridgeSide2"])
 
         for option in options:
             tempNode = copy.deepcopy(node)
@@ -80,9 +88,10 @@ class BridgeAndTorchGame:
 
         return possibleNodes
 
-    def getCombinations(self, side):
+    def getMoves(self, side):
         options = []
         for person in side:
+            options.append([person, None])
             for person2 in side:
                 if person != person2:
                     options.append([person, person2])
@@ -93,6 +102,15 @@ class BridgeAndTorchGame:
         print("Side 2: " + str(node.state["bridgeSide2"]))
         print("Torch on Side 1: " + str(node.state["torchOnSide1"]))
 
+    def getCondensedNode(self, node):
+        returnString = "1S"
+        for person in node.state["bridgeSide1"]:
+            returnString += str(person)
+        returnString += "2S"
+        for person in node.state["bridgeSide2"]:
+            returnString += str(person)
+        returnString += str(node.state["torchOnSide1"])
+        return returnString
 
 if __name__ == "__main__":
     # personLength = int(input("Number of People: "))
@@ -102,11 +120,14 @@ if __name__ == "__main__":
     #     people.append(person)
     # game = BridgeAndTorchGame(people, None)
     # game.printBoard()
-    # #game = BridgeAndTorchGame([1,2,3], None)
+    game = BridgeAndTorchGame([1,2,3])
+    game.setAi(BfsAi(game))
     # game.userGameLoop()
-    # #game.aiGameLoop()
-    game = BridgeAndTorchGame([1,2,3,4], None)
-    nodes = game.expandNodes(game.currentNode)
-    game.printState(game.currentNode)
-    for node in nodes:
-        game.printState(node)
+    print("Game Start.")
+    game.aiGameLoop()
+    # game = BridgeAndTorchGame([1,2,3,4], None)
+    # nodes = game.expandNodes(game.currentNode)
+    # game.printState(game.currentNode)
+    # for node in nodes:
+    #     game.printState(node)
+    #     print()
