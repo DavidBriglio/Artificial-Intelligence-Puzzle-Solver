@@ -4,7 +4,7 @@ from datetime import datetime
 from node import Node
 
 #rotate and slice: gridCopy = list(reversed(list(zip(*gridCopy[1:]))))
-#NOTE: When indexing into the game board, use board[y][x] NOT board[x][y].
+#NOTE: When indexing into the game board, use board[row][col]
 class SpaceProblemGame:
 
     currentNode = None

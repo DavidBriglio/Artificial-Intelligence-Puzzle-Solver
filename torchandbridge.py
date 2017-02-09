@@ -1,4 +1,6 @@
+import copy
 from node import Node
+
 #TODO: Fix consistancy of tabs/spaces
 class BridgeAndTorchGame:
 
@@ -14,55 +16,51 @@ class BridgeAndTorchGame:
         side2 = node.state["bridgeSide2"] if node.state["torchOnSide1"] else node.state["bridgeSide1"]
         moveMade = False
         if person1 != None and person1 != '' and person1 in side:
-        	side2.append(person1)
-        	side.remove(person1)
-        	moveMade = True
+            side2.append(person1)
+            side.remove(person1)
+            moveMade = True
 
         if person2 != None and person2 != '' and person2 in side:
-        	side2.append(person2)
-        	side.remove(person2)
-        	moveMade = True
+            side2.append(person2)
+            side.remove(person2)
+            moveMade = True
 
         if moveMade == True:
-        	node.state["torchOnSide1"] = node.state["torchOnSide1"] == False
+            node.state["torchOnSide1"] = node.state["torchOnSide1"] == False
 
         node.state["bridgeSide1"] = side if node.state["torchOnSide1"] else side2
         node.state["bridgeSide2"] = side2 if node.state["torchOnSide1"] else side
-        return node
-
-    def printBoard(self):
-        print("Current Node: " + str(self.currentNode))
 
     def userGameLoop(self):
         endGame = False
         while endGame == False:
-        	p1 = input("Move Person 1: ")
-        	if p1 == '':
-        		p1 = -1
-        	else:
-        		p1 = int(p1)
+            p1 = input("Move Person 1: ")
+            if p1 == '':
+                p1 = -1
+            else:
+                p1 = int(p1)
 
-        	p2 = input("Move Person 2: ")
-        	if p2 == '':
-        		p2 = -1
-        	else:
-        		p2 = int(p2)
+            p2 = input("Move Person 2: ")
+            if p2 == '':
+                p2 = -1
+            else:
+                p2 = int(p2)
 
-        	self.makeMove(self.currentNode, p1, p2)
-        	self.printBoard()
-        	endGame = self.checkGameEnd()
-        	if endGame:
-        		print("Game End")
+            self.makeMove(self.currentNode, p1, p2)
+            self.printBoard()
+            endGame = self.checkGameEnd()
+            if endGame:
+                print("Game End")
 
     def aiGameLoop(self):
         endGame = True
         while endGame == False:
-        	m1, m2 = self.ai.getMove()
-        	self.makeMove(self.currentNode, m1, m2)
-        	self.printBoard()
-        	endGame = self.checkGameEnd()
-        	if endGame:
-        		print("Game End")
+            m1, m2 = self.ai.getMove()
+            self.makeMove(self.currentNode, m1, m2)
+            self.printBoard()
+            endGame = self.checkGameEnd()
+            if endGame:
+                print("Game End")
 
     def checkGameEnd(self):
         return self.bridgeSide1 == []
@@ -71,36 +69,44 @@ class BridgeAndTorchGame:
         options = []
         possibleNodes = []
         if node.state["torchOnSide1"]:
-        	options = self.getCombinations(node.state["bridgeSide1"])
+            options = self.getCombinations(node.state["bridgeSide1"])
         else:
-        	options = self.getCombinations(node.state["bridgeSide2"])
+            options = self.getCombinations(node.state["bridgeSide2"])
 
-        #TODO: FIX
         for option in options:
-        	possibleNodes.append(Node(self.makeMove(node, option[0], option[1]), node))
+            tempNode = copy.deepcopy(node)
+            self.makeMove(tempNode, option[0], option[1])
+            possibleNodes.append(tempNode)
 
         return possibleNodes
 
     def getCombinations(self, side):
         options = []
         for person in side:
-        	for person2 in side:
-        		if person != person2:
-        			options.append([person, person2])
+            for person2 in side:
+                if person != person2:
+                    options.append([person, person2])
         return options
 
+    def printState(self, node):
+        print("Side 1: " + str(node.state["bridgeSide1"]))
+        print("Side 2: " + str(node.state["bridgeSide2"]))
+        print("Torch on Side 1: " + str(node.state["torchOnSide1"]))
 
 
 if __name__ == "__main__":
-	# personLength = int(input("Number of People: "))
-	# people = []
-	# for index in range(personLength):
-	# 	person = int(input("Person " + str(index+1) + ": "))
-	# 	people.append(person)
-	# game = BridgeAndTorchGame(people, None)
-	# game.printBoard()
-	# #game = BridgeAndTorchGame([1,2,3], None)
-	# game.userGameLoop()
-	# #game.aiGameLoop()
-	game = BridgeAndTorchGame([1,2,3,4], None)
-	print(game.expandNodes(Node({"bridgeSide1":[1,2,3,4], "bridgeSide2":[], "torchOnSide1":True}, None)))
+    # personLength = int(input("Number of People: "))
+    # people = []
+    # for index in range(personLength):
+    #     person = int(input("Person " + str(index+1) + ": "))
+    #     people.append(person)
+    # game = BridgeAndTorchGame(people, None)
+    # game.printBoard()
+    # #game = BridgeAndTorchGame([1,2,3], None)
+    # game.userGameLoop()
+    # #game.aiGameLoop()
+    game = BridgeAndTorchGame([1,2,3,4], None)
+    nodes = game.expandNodes(game.currentNode)
+    game.printState(game.currentNode)
+    for node in nodes:
+        game.printState(node)
