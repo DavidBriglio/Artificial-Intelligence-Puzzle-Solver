@@ -16,11 +16,10 @@ class SpaceProblemGame:
         self.setupGame(board, w, h, spaces)
         self.currentNode = Node({"board":board, "spaceCount":spaces, "width":w, "height":h}, None)
 
-        def getWinningState(self):
-		    #Initialize the state
-		    #state = [[0 for x in range(self.width)] for y in range(self.height)]
-            return [[1,2,3],[8,0,4],[7,6,5]] #TODO: put in logic
-
+    def getWinningState(self):
+	    #Initialize the state
+	    #state = [[0 for x in range(self.width)] for y in range(self.height)]
+        return [[1,2,3],[8,0,4],[7,6,5]] #TODO: put in logic
 
     def setupGame(self, board, width, height, spaceCount):
         numberCount = (width * height) - spaceCount
@@ -38,56 +37,116 @@ class SpaceProblemGame:
                 board[colIndex][rowIndex] = tempArray[index]
                 tempArray.remove(tempArray[index])
 
-    #TODO: Add knight moves
-    def makeMove(self, node, px, py, direction):
+    #TODO: Cleanup the speed of this
+    def getMovesFromPosition(self, node, row, col):
 
         #Boolean if the tile selected is a blank tile
-        isBlankSpace = node.state["board"][py][px] == 0
-        height = node.state["height"]
-        width = node.state["width"]
+        moves = []
+        isBlankSpace = node.state["board"][row][col] == 0
+        height = node.state["height"] - 1
+        width = node.state["width"] - 1
 
-        if direction == "left" and px - 1 >= 0 and (node.state["board"][py][px - 1] == 0 or isBlankSpace):
-            self.swap(node, px, py, px - 1, py)
-        elif direction == "right" and px + 1 <= width - 1 and (node.state["board"][py][px + 1] == 0 or isBlankSpace):
-            self.swap(node, px, py, px + 1, py)
-        elif direction == "up" and py - 1 >= 0 and (node.state["board"][py - 1][px] == 0 or isBlankSpace):
-            self.swap(node, px, py, px, py - 1)
-        elif direction == "down" and py + 1 <= height - 1 and (node.state["board"][py + 1][px] == 0 or isBlankSpace):
-            self.swap(node, px, py, px, py + 1)
-        elif direction == "upright" and px + 1 <= width and py - 1 >= 0 and (node.state["board"][py - 1][px + 1] == 0 or isBlankSpace):
-            self.swap(node, px, py, px + 1, py - 1)
-        elif direction == "upleft" and px - 1 >= 0 and py - 1 >= 0 and (node.state["board"][py - 1][px - 1] == 0 or isBlankSpace):
-            self.swap(node, px, py, px - 1, py - 1)
-        elif direction == "downleft" and px - 1 >= 0 and py + 1 <= height and (node.state["board"][py + 1][px - 1] == 0 or isBlankSpace):
-            self.swap(node, px, py, px - 1, py + 1)
-        elif direction == "downright" and px + 1 <= width and py + 1 <= height and (node.state["board"][py + 1][px + 1] == 0 or isBlankSpace):
-            self.swap(node, px, py, px + 1, py + 1)
-        elif direction == "hrightup" and px + 2 <= width and py - 1 >= 0:
-            self.swap(node, px, py, px + 2, py - 1)
-        elif direction == "hleftup" and px - 2 >= 0 and py - 1 >= 0:
-            self.swap(node, px, py, px - 2, py - 1)
-        elif direction == "hrightdown" and px + 2 <= width and py + 1 <= height:
-            self.swap(node, px, py, px + 1, py + 1)
-        elif direction == "hleftdown" and px - 2 >= 0 and py + 1 <= height:
-            self.swap(node, px, py, px - 2, py + 1)
-        elif direction == "hupright" and px + 1 <= width and py - 2 >= 0:
-            self.swap(node, px, py, px + 1, py - 2)
-        elif direction == "hupleft" and px - 1 >= 0 and py - 2 >= 0:
-            self.swap(node, px, py, px - 1, py - 2)
-        elif direction == "hdownright" and px + 1 <= width and py + 2 <= height:
-            self.swap(node, px, py, px + 1, py + 2)
-        elif direction == "hdownleft" and px - 1 >= 0 and py + 2 <= height:
-            self.swap(node, px, py, px - 1, py + 2)
-        else:
-            print("Invalid Move.")
+        #left
+        if col - 1 >= 0 and (node.state["board"][row][col-1] == 0 or isBlankSpace):
+            moves.append(node.state["board"][row][col-1])
 
-    def swap(self, node, p1x, p1y, p2x, p2y):
-        temp = node.state["board"][p1y][p1x]
-        node.state["board"][p1y][p1x] = node.state["board"][p2y][p2x]
-        node.state["board"][p2y][p2x] = temp
+        #right
+        if col + 1 <= width and (node.state["board"][row][col+1] == 0 or isBlankSpace):
+            moves.append(node.state["board"][row][col+1])
 
-    def printBoard(self):
-        for row in self.currentNode.state["board"]:
+        #up
+        if row - 1 >= 0 and (node.state["board"][row-1][col] == 0 or isBlankSpace):
+            moves.append(node.state["board"][row-1][col])
+
+        #down
+        if row + 1 <= height and (node.state["board"][row+1][col] == 0 or isBlankSpace):
+            moves.append(node.state["board"][row+1][col])
+
+        #up right
+        if row - 1 >= 0 and col + 1 <= width and (node.state["board"][row-1][col+1] == 0 or isBlankSpace):
+            moves.append(node.state["board"][row-1][col+1])
+
+        #up left
+        if col - 1 >= 0 and row - 1 >= 0 and (node.state["board"][row - 1][col - 1] == 0 or isBlankSpace):
+            moves.append(node.state["board"][row-1][col-1])
+
+        #down left
+        if col - 1 >= 0 and row + 1 <= height and (node.state["board"][row+1][col-1] == 0 or isBlankSpace):
+            moves.append(node.state["board"][row+1][col-1])
+
+        #down right
+        if col + 1 <= width and row + 1 <= height and (node.state["board"][row + 1][col + 1] == 0 or isBlankSpace):
+            moves.append(node.state["board"][row+1][col+1])
+
+        if not isBlankSpace:
+            #knight >^
+            if col + 2 <= width and row - 1 >= 0 and node.state["board"][row-1][col+2] != 0:
+                moves.append(node.state["board"][row-1][col+2])
+
+            #knight <^
+            if col - 2 >= 0 and row - 1 >= 0 and node.state["board"][row-1][col-2] != 0:
+                moves.append(node.state["board"][row-1][col-2])
+
+            #knight >v
+            if col + 2 <= width and row + 1 <= height and node.state["board"][row+1][col+2] != 0:
+                moves.append(node.state["board"][row+1][col+2])
+
+            #knight <v
+            if col - 2 >= 0 and row + 1 <= height and node.state["board"][row+1][col-2] != 0:
+                moves.append(node.state["board"][row+1][col-2])
+
+            #knight >^
+            if col + 1 <= width and row - 2 >= 0 and node.state["board"][row-2][col+1] != 0:
+                moves.append(node.state["board"][row-2][col+1])
+
+            #knight <^
+            if col - 1 >= 0 and row - 2 >= 0 and node.state["board"][row-2][col-1] != 0:
+                moves.append(node.state["board"][row-2][col-1])
+
+            #knight >v
+            if col + 1 <= width and row + 2 <= height and node.state["board"][row+2][col+1] != 0:
+                moves.append(node.state["board"][row+2][col+1])
+
+            #knight <v
+            if col - 1 >= 0 and row + 2 <= height and node.state["board"][row+2][col-1] != 0:
+                moves.append(node.state["board"][row+2][col-1])
+
+        return moves
+
+    def expandNodes(self, node):
+        movesets = self.getMoves(node)
+        nodes = []
+        for moveset in movesets:
+            for move in moveset["moves"]:
+                tempNode = node
+                self.swap(tempNode, moveset["slot"], move)
+                nodes.append(Node(tempNode.state, node))
+        return nodes
+
+    def getMoves(self, node):
+        possibleMoves = []
+        for rowIndex in range(0,node.state["height"]):
+            for colIndex in range(0,node.state["width"]):
+                moves = self.getMovesFromPosition(node, rowIndex, colIndex)
+                if moves != None:
+                    possibleMoves.append({"slot":node.state["board"][rowIndex][colIndex], "moves":moves})
+        return possibleMoves
+
+    def swap(self, node, tile1, tile2):
+        index1row, index1col = self.getPosition(node, tile1)
+        index2row, index2col = self.getPosition(node, tile2)
+        temp = node.state["board"][index1row][index1col]
+        node.state["board"][index1row][index1col] = node.state["board"][index2row][index2col]
+        node.state["board"][index2row][index2col] = temp
+
+    def getPosition(self, node, tile):
+        for rowIndex in range(0, node.state["height"]):
+            for colIndex in range(0, node.state["width"]):
+                if node.state["board"][rowIndex][colIndex] == tile:
+                    return rowIndex, colIndex
+
+    def printBoard(self, node):
+        for row in node.state["board"]:
             print(row)
 
     def userGameLoop(self):
@@ -100,7 +159,7 @@ class SpaceProblemGame:
                 self.makeMove(self.currentNode, int(px), int(py), direction)
             else:
                 print("Invalid Input.")
-            self.printBoard()
+            self.printBoard(self.currentNode)
 
     def aiGameLoop(self):
         endGame = False
@@ -110,7 +169,7 @@ class SpaceProblemGame:
             self.makeMove(self.currentNode, int(px), int(py), direction)
         else:
             print("Invalid Input.")
-        self.printBoard()
+        self.printBoard(self.currentNode)
 
 if __name__ == "__main__":
     #w = input("Width: ")
@@ -118,6 +177,11 @@ if __name__ == "__main__":
     #s = input("Spaces: ")
     #game = SpaceProblemGame(w,l,s,None)
     game = SpaceProblemGame(3,3,1,None)
-    game.printBoard()
-    game.userGameLoop()
+    print("Current Board: ")
+    game.printBoard(game.currentNode)
+    nodes = game.expandNodes(game.currentNode)
+    for node in nodes:
+        print("Possible Move: ")
+        print(game.printBoard(node))
+    #game.userGameLoop()
     #game.aiGameLoop()
