@@ -1,3 +1,5 @@
+import copy
+
 
 class Node:
 
@@ -8,7 +10,7 @@ class Node:
     cost = 0
 
     def __init__(self, state, parent):
-        self.state = state
+        self.state = copy.deepcopy(state)
         self.parent = parent
         if self.parent != None:
             self.depth = self.parent.depth + 1

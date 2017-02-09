@@ -1,4 +1,5 @@
 import random
+import copy
 from datetime import datetime
 from node import Node
 
@@ -37,7 +38,7 @@ class SpaceProblemGame:
                 board[colIndex][rowIndex] = tempArray[index]
                 tempArray.remove(tempArray[index])
 
-    #TODO: Cleanup the speed of this
+    #TODO: Cleanup the speed of this, and fully implement all knight moves
     def getMovesFromPosition(self, node, row, col):
 
         #Boolean if the tile selected is a blank tile
@@ -116,11 +117,11 @@ class SpaceProblemGame:
     def expandNodes(self, node):
         movesets = self.getMoves(node)
         nodes = []
-        for moveset in movesets:
+        for moveset in movesets:            #TODO: A new board is not being used each time
             for move in moveset["moves"]:
-                tempNode = node
+                tempNode = copy.deepcopy(node)
                 self.swap(tempNode, moveset["slot"], move)
-                nodes.append(Node(tempNode.state, node))
+                nodes.append(tempNode)
         return nodes
 
     def getMoves(self, node):
