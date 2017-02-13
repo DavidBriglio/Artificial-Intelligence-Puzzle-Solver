@@ -15,7 +15,7 @@ class SpaceProblemGame:
         board = [[0 for x in range(w)] for y in range(h)]
         random.seed(datetime.now())
         self.setupGame(board, w, h, spaces)
-        self.currentNode = Node({"board":board, "spaceCount":spaces, "width":w, "height":h}, None)
+        self.currentNode = Node({"board":board, "spaceCount":spaces, "width":w, "height":h}, None, None)
 
     def getWinningState(self):
 	    #Initialize the state
@@ -121,7 +121,7 @@ class SpaceProblemGame:
             for move in moveset["moves"]:
                 tempNode = copy.deepcopy(node)
                 self.swap(tempNode, moveset["slot"], move)
-                nodes.append(tempNode)
+                nodes.append(Node(tempNode.state, move, node))
         return nodes
 
     def getMoves(self, node):
@@ -194,4 +194,4 @@ if __name__ == "__main__":
     #game.userGameLoop()
     #game.aiGameLoop()
 
-    print(game.getCondensedNode(Node({"board":[[1,2,3],[4,5,6],[7,8,0]], "width":3, "height":3}, None)))
+    print(game.getCondensedNode(Node({"board":[[1,2,3],[4,5,6],[7,8,0]], "width":3, "height":3}, None, None)))
