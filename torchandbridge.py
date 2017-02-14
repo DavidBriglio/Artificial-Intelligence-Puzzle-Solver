@@ -60,10 +60,10 @@ class BridgeAndTorchGame:
         while endGame == False:
             print("\nAsking AI for move.")
             move = self.ai.makeMove()
-            if move == None:
-                print("AI found no solution.")
-                endGame = True
-            else:
+            # if move == None:
+            #     print("AI found no solution.")
+            #     endGame = True
+            if move != None:
                 print("AI move:")
                 print("MOVE: " + str(move))
                 self.makeMove(self.currentNode, move[0], move[1])
@@ -132,7 +132,7 @@ if __name__ == "__main__":
     #     people.append(person)
     # game = BridgeAndTorchGame(people, None)
     # game.printBoard()
-    game = BridgeAndTorchGame([1,2,3])
+    game = BridgeAndTorchGame([1,2,3,4])
     game.setAi(BfsAi(game))
     print("Game Start.")
     game.aiGameLoop()
