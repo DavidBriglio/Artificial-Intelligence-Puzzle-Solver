@@ -23,7 +23,7 @@ class BfsAi:
             node = node.parent
 
     def solveProblem(self):
-
+        #print("----")
         #Check if the queue is empty
         if self.stateQueue:
 
