@@ -11,7 +11,7 @@ class Node:
         self.parent = copy.deepcopy(parent)
         self.action = copy.deepcopy(action)
         if self.parent != None:
-            self.depth = copy.deepcopy(self.parent.depth + 1)
+            self.depth = self.parent.depth + 1
         else:
             self.depth = 0
 		#self.cost = self.depth

@@ -1,8 +1,8 @@
 import copy
 from node import Node
 from BFS import BfsAi
+from DFS import DfsAi
 
-#TODO: Fix consistancy of tabs/spaces
 class BridgeAndTorchGame:
 
     currentNode = None
@@ -28,32 +28,12 @@ class BridgeAndTorchGame:
             side.remove(person2)
             moveMade = True
 
-        if moveMade == True:
+        if moveMade:
             node.state["torchOnSide1"] = node.state["torchOnSide1"] == False
 
-        #node.state["bridgeSide1"] = side if node.state["torchOnSide1"] else side2
-        #node.state["bridgeSide2"] = side2 if node.state["torchOnSide1"] else side
+        #node.state["bridgeSide1"] = side if node.state["bridgeSide1"] else side2
+        #node.state["bridgeSide2"] = side2 if node.state["bridgeSide2"] else side
 
-    def userGameLoop(self):
-        endGame = False
-        while endGame == False:
-            p1 = input("Move Person 1: ")
-            if p1 == '':
-                p1 = -1
-            else:
-                p1 = int(p1)
-
-            p2 = input("Move Person 2: ")
-            if p2 == '':
-                p2 = -1
-            else:
-                p2 = int(p2)
-
-            self.makeMove(self.currentNode, p1, p2)
-            self.printBoard()
-            endGame = self.checkGameEnd()
-            if endGame:
-                print("Game End")
 
     def aiGameLoop(self):
         endGame = False
@@ -133,7 +113,8 @@ if __name__ == "__main__":
     # game = BridgeAndTorchGame(people, None)
     # game.printBoard()
     game = BridgeAndTorchGame([1,2,3,4])
-    game.setAi(BfsAi(game))
+    #ame.setAi(BfsAi(game))
+    game.setAi(DfsAi(game))
     print("Game Start.")
     game.aiGameLoop()
     # game.userGameLoop()

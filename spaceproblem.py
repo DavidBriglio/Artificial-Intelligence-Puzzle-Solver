@@ -1,8 +1,12 @@
 import random
 import copy
 from BFS import BfsAi
+from DFS import DfsAi
 from datetime import datetime
 from node import Node
+from sys import setrecursionlimit
+
+#setrecursionlimit(5000)
 
 #rotate and slice: gridCopy = list(reversed(list(zip(*gridCopy[1:]))))
 #NOTE: When indexing into the game board, use board[row][col]
@@ -15,7 +19,10 @@ class SpaceProblemGame:
         board = [[0 for x in range(w)] for y in range(h)]
         random.seed(datetime.now())
         self.setupGame(board, w, h, spaces)
-        self.currentNode = Node({"board":board, "spaceCount":spaces, "width":w, "height":h}, None, None)
+        self.currentNode = Node({"board":board}, None, None)
+        self.spaceCount = spaces
+        self.width = w
+        self.height = h
 
     def setAi(self, newAi):
         self.ai = newAi
@@ -23,8 +30,8 @@ class SpaceProblemGame:
     def checkGameEnd(self, node):
 	    #Initialize the state
 	    #state = [[0 for x in range(self.width)] for y in range(self.height)]
-        #return node.state["board"] == [[1,2,3],[8,0,4],[7,6,5]] #TODO: put in logic
-        return node.state["board"] == [[1,2],[3,0]]
+        return node.state["board"] == [[1,2,3],[8,0,4],[7,6,5]] #TODO: put in logic
+        #return node.state["board"] == [[1,2],[3,0]]
 
     def setupGame(self, board, width, height, spaceCount):
         numberCount = (width * height) - spaceCount
@@ -43,86 +50,108 @@ class SpaceProblemGame:
                 tempArray.remove(tempArray[index])
 
     #TODO: Cleanup the speed of this, and fully implement all knight moves
-    def getMovesFromPosition(self, node, row, col):
+    def getHMovesFromPosition(self, node, row, col):
 
         #Boolean if the tile selected is a blank tile
         moves = []
-        isBlankSpace = node.state["board"][row][col] == 0
-        height = node.state["height"] - 1
-        width = node.state["width"] - 1
+        board = node.state["board"]
+        if board[row][col] == 0:
+            return moves
+        height = self.height - 1
+        width = self.width - 1
         currentTile = [row,col]
 
+        #knight >>^
+        if col + 2 <= width and row - 1 >= 0 and board[row-1][col+2]:
+            moves.append([currentTile,[row-1,col+2]])
+
+        #knight <<^
+        # if col - 2 >= 0 and row - 1 >= 0 and node.state["board"][row-1][col-2]:
+        #     moves.append([currentTile,[row-1,col-2]])
+
+        #knight >>v
+        if col + 2 <= width and row + 1 <= height and board[row+1][col+2]:
+            moves.append([currentTile,[row+1,col+2]])
+
+        #knight <<v
+        # if col - 2 >= 0 and row + 1 <= height and node.state["board"][row+1][col-2]:
+        #     moves.append([currentTile,[row+1,col-2]])
+
+        #knight >^^
+        if col + 1 <= width and row - 2 >= 0 and board[row-2][col+1]:
+            moves.append([currentTile,[row-2,col+1]])
+
+        #knight <^^
+        if col - 1 >= 0 and row - 2 >= 0 and board[row-2][col-1]:
+            moves.append([currentTile,[row-2,col-1]])
+
+        #knight >vv
+        if col + 1 <= width and row + 2 <= height and board[row+2][col+1]:
+            moves.append([currentTile,[row+2,col+1]])
+
+        #knight <vv
+        if col - 1 >= 0 and row + 2 <= height and board[row+2][col-1]:
+            moves.append([currentTile,[row+2,col-1]])
+
+        return moves
+
+    def getZeroMoves(self, node):
+        moves = []
+        row = None
+        col = None
+        currentTile = None
+        height = self.height - 1
+        width = self.width - 1
+        board = node.state["board"]
+
+        for rowIndex in range(0,height + 1):
+            for colIndex in range(0,width + 1):
+                if board[rowIndex][colIndex] == 0:
+                    row = rowIndex
+                    col = colIndex
+                    currentTile = [row,col]
+                    break
+            if currentTile:
+                break
+
         #left
-        if col - 1 >= 0 and (node.state["board"][row][col-1] == 0 or isBlankSpace):
+        if col - 1 >= 0:
             moves.append([currentTile,[row,col-1]])
 
         #right
-        if col + 1 <= width and (node.state["board"][row][col+1] == 0 or isBlankSpace):
+        if col + 1 <= width:
             moves.append([currentTile,[row,col+1]])
 
         #up
-        if row - 1 >= 0 and (node.state["board"][row-1][col] == 0 or isBlankSpace):
+        if row - 1 >= 0:
             moves.append([currentTile,[row-1,col]])
 
         #down
-        if row + 1 <= height and (node.state["board"][row+1][col] == 0 or isBlankSpace):
+        if row + 1 <= height:
             moves.append([currentTile,[row+1,col]])
 
         #up right
-        if row - 1 >= 0 and col + 1 <= width and (node.state["board"][row-1][col+1] == 0 or isBlankSpace):
+        if row - 1 >= 0 and col + 1 <= width:
             moves.append([currentTile,[row-1,col+1]])
 
         #up left
-        if col - 1 >= 0 and row - 1 >= 0 and (node.state["board"][row - 1][col - 1] == 0 or isBlankSpace):
+        if col - 1 >= 0 and row - 1 >= 0:
             moves.append([currentTile,[row-1,col-1]])
 
         #down left
-        if col - 1 >= 0 and row + 1 <= height and (node.state["board"][row+1][col-1] == 0 or isBlankSpace):
+        if col - 1 >= 0 and row + 1 <= height:
             moves.append([currentTile,[row+1,col-1]])
 
         #down right
-        if col + 1 <= width and row + 1 <= height and (node.state["board"][row + 1][col + 1] == 0 or isBlankSpace):
+        if col + 1 <= width and row + 1 <= height:
             moves.append([currentTile,[row+1,col+1]])
-
-        if not isBlankSpace:
-            #knight >^
-            if col + 2 <= width and row - 1 >= 0 and node.state["board"][row-1][col+2] != 0:
-                moves.append([currentTile,[row-1,col+2]])
-
-            #knight <^
-            if col - 2 >= 0 and row - 1 >= 0 and node.state["board"][row-1][col-2] != 0:
-                moves.append([currentTile,[row-1,col-2]])
-
-            #knight >v
-            if col + 2 <= width and row + 1 <= height and node.state["board"][row+1][col+2] != 0:
-                moves.append([currentTile,[row+1,col+2]])
-
-            #knight <v
-            if col - 2 >= 0 and row + 1 <= height and node.state["board"][row+1][col-2] != 0:
-                moves.append([currentTile,[row+1,col-2]])
-
-            #knight >^
-            if col + 1 <= width and row - 2 >= 0 and node.state["board"][row-2][col+1] != 0:
-                moves.append([currentTile,[row-2,col+1]])
-
-            #knight <^
-            if col - 1 >= 0 and row - 2 >= 0 and node.state["board"][row-2][col-1] != 0:
-                moves.append([currentTile,[row-2,col-1]])
-
-            #knight >v
-            if col + 1 <= width and row + 2 <= height and node.state["board"][row+2][col+1] != 0:
-                moves.append([currentTile,[row+2,col+1]])
-
-            #knight <v
-            if col - 1 >= 0 and row + 2 <= height and node.state["board"][row+2][col-1] != 0:
-                moves.append([currentTile,[row+2,col-1]])
 
         return moves
 
     def expandNodes(self, node):
         movesets = self.getMoves(node)
         nodes = []
-        for move in movesets:            #TODO: A new board is not being used each time
+        for move in movesets:
             tempNode = copy.deepcopy(node)
             self.makeMove(tempNode, move)
             nodes.append(Node(tempNode.state, move, node))
@@ -130,14 +159,13 @@ class SpaceProblemGame:
 
     def getMoves(self, node):
         possibleMoves = []
-        for rowIndex in range(0,node.state["height"]):
-            for colIndex in range(0,node.state["width"]):
-                moves = self.getMovesFromPosition(node, rowIndex, colIndex)
-                if moves != None:
-                    possibleMoves.extend(moves)
+        possibleMoves.extend(self.getZeroMoves(node))
+        for rowIndex in range(0,self.height):
+            for colIndex in range(0,self.width):
+                possibleMoves.extend(self.getHMovesFromPosition(node, rowIndex, colIndex))
         return possibleMoves
 
-    #TODO: Check for legality
+    #TODO: Check for legality?
     def makeMove(self, node, move):
         index1row, index1col, index2row, index2col = move[0][0], move[0][1], move[1][0], move[1][1]
         temp = node.state["board"][index1row][index1col]
@@ -178,10 +206,10 @@ class SpaceProblemGame:
                 endGame = True
 
     def getCondensedNode(self, node):
-        returnString = ""
-        for rowIndex in range(0, node.state["height"]):
-            for colIndex in range(0, node.state["width"]):
-                returnString += str(node.state["board"][rowIndex][colIndex])
+        returnString = str(node.state["board"])
+        # for rowIndex in range(0, node.state["height"]):
+        #     for colIndex in range(0, node.state["width"]):
+        #         returnString += str(node.state["board"][rowIndex][colIndex])
         return returnString
 
 if __name__ == "__main__":
@@ -189,7 +217,7 @@ if __name__ == "__main__":
     #l = input("Length: ")
     #s = input("Spaces: ")
     #game = SpaceProblemGame(w,l,s,None)
-    game = SpaceProblemGame(2,2,1)
+    game = SpaceProblemGame(3,3,1)
     print("Current Board: ")
     game.printBoard(game.currentNode)
     # nodes = game.expandNodes(game.currentNode)
@@ -203,5 +231,6 @@ if __name__ == "__main__":
     #game.userGameLoop()
 
 
-    game.setAi(BfsAi(game))
+    #game.setAi(BfsAi(game))
+    game.setAi(DfsAi(game))
     game.aiGameLoop()
