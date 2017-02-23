@@ -35,7 +35,7 @@ class DfsAi:
                 #Solution found!
                 return node
             else:
-                #Add all unvisited nodes to the stack
+                # Add all unvisited nodes to the stack
                 nodes = self.game.expandNodes(node)
                 for tempNode in nodes:
                     condensed = self.game.getCondensedNode(tempNode)

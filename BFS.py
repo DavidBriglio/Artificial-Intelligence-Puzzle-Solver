@@ -10,7 +10,7 @@ class BfsAi:
     def __init__(self, game):
         self.game = game
         self.stateQueue.put(game.currentNode)
-        self.winningNode = self.solveProblemNoRec()
+        self.winningNode = self.solveProblem()
         self.makeMoveList()
 
     def makeMove(self):
@@ -22,66 +22,27 @@ class BfsAi:
             self.moveList.append(node.action)
             node = node.parent
 
-    def solveProblemNoRec(self):
+    def solveProblem(self):
 
         while self.stateQueue:
-            #Pop the next state from the queue
+            # Pop the next state from the queue
             state = self.stateQueue.get()
 
-            #Check if that state is a game win scenario
+            # Check if that state is a game win scenario
             if self.game.checkGameEnd(state) == True:
 
-                #If it is a winning state, return it
+                # If it is a winning state, return it
                 print("  BFS: SOLUTION FOUND!")
                 return state
             else:
 
-                #Get all possible moves from the current node
+                # Get all possible moves from the current node
                 moves = self.game.expandNodes(state)
 
-                #Add each possible move that has not been seen yet to the state queue
+                # Add each possible move that has not been seen yet to the state queue
                 for move in moves:
                     condensed = self.game.getCondensedNode(move)
 
                     if not condensed in self.statesVisited:
                         self.statesVisited.add(condensed)
                         self.stateQueue.put(move)
-
-    def solveProblem(self):
-
-        #Check if the queue is empty
-        if self.stateQueue:
-
-            #Pop the next state from the queue
-            state = self.stateQueue.get()
-
-            #Check if that state is a game win scenario
-            if self.game.checkGameEnd(state) == True:
-
-                #If it is a winning state, return it
-                print("  BFS: SOLUTION FOUND!")
-                return state
-            else:
-
-                #Get all possible moves from the current node
-                moves = self.game.expandNodes(state)
-
-                #Add each possible move that has not been seen yet to the state queue
-                for move in moves:
-                    condensed = self.game.getCondensedNode(move)
-
-                    if not condensed in self.statesVisited:
-                        self.statesVisited[condensed] = True
-
-                        #Check if the state is a game win scenario before adding it to the state queue
-                        #if self.game.checkGameEnd(move) == True:
-                            #If it is a winning state, return it
-                            #return move
-                        #else:
-                            #Add the state to the state queue if it is not a win
-                        self.stateQueue.put(move)
-                    #else:
-                        #Do not add it to the queue
-
-            #Recursive call to continue with the next set of nodes
-            return self.solveProblem()

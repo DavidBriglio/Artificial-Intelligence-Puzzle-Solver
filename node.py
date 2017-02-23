@@ -7,14 +7,27 @@ class Node:
     cost = 0
 
     def __init__(self, state, action, parent):
-        self.state = copy.deepcopy(state)
-        self.parent = copy.deepcopy(parent)
-        self.action = copy.deepcopy(action)
+        self.state = state #copy.deepcopy(state)
+        self.parent = parent #copy.deepcopy(parent)
+        self.action = action #copy.deepcopy(action)
         if self.parent != None:
             self.depth = self.parent.depth + 1
         else:
             self.depth = 0
 		#self.cost = self.depth
+
+    def __eq__(self, other):
+        if other != None and str(self.state) == str(other.state):
+            return True
+        return False
+
+    def __cmp__(self, other):
+        if self.cost < other.cost:
+            return -1
+        elif self.cost == other.cost:
+            return 0
+        else:
+            return 1
 
     def __repr__(self):
         #return str(self.state) + ", " + str(self.depth) + ", " + str(self.action) + ", " + str(self.cost)

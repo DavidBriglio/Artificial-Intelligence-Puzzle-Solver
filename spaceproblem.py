@@ -14,6 +14,7 @@ class SpaceProblemGame:
 
     currentNode = None
     ai = None
+    solution = [[1,2,3],[8,0,4],[7,6,5]] #[[1,2],[3,0]]
 
     def __init__(self, w, h, spaces):
         board = [[0 for x in range(w)] for y in range(h)]
@@ -30,8 +31,7 @@ class SpaceProblemGame:
     def checkGameEnd(self, node):
 	    #Initialize the state
 	    #state = [[0 for x in range(self.width)] for y in range(self.height)]
-        return node.state["board"] == [[1,2,3],[8,0,4],[7,6,5]] #TODO: put in logic
-        #return node.state["board"] == [[1,2],[3,0]]
+        return node.state["board"] == self.solution #TODO: put in logic
 
     def setupGame(self, board, width, height, spaceCount):
         numberCount = (width * height) - spaceCount
@@ -211,6 +211,19 @@ class SpaceProblemGame:
         #     for colIndex in range(0, node.state["width"]):
         #         returnString += str(node.state["board"][rowIndex][colIndex])
         return returnString
+
+    #Count the number of tiles that are out of place
+    def getHeuristic1(self, node):
+        numOff = 0
+        for rowIndex in range(0,self.height):
+            for colIndex in range(0,self.width):
+                if node.state["board"][rowIndex][colIndex] != self.solution[rowIndex][colIndex]:
+                    numOff += 1
+        return numOff
+
+    #Sum the distance each tile is out of place
+    def getHeuristic2(self, node):
+        return None
 
 if __name__ == "__main__":
     #w = input("Width: ")

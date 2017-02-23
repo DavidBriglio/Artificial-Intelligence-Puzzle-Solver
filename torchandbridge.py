@@ -101,6 +101,13 @@ class BridgeAndTorchGame:
 
         return returnString
 
+    #Returns the total number of people on side 1 (total - side 2)
+    def getHeuristic1(self, node):
+        return len(node.state["bridgeSide1"])
+
+    #Returns the total speed of everyone on side 1 (total - side 2)
+    def getHeuristic2(self, node):
+        return sum(node.state["bridgeSide1"])
 
 
 
