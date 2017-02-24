@@ -2,6 +2,7 @@ import random
 import copy
 from BFS import BfsAi
 from DFS import DfsAi
+from AS import AsAi
 from datetime import datetime
 from node import Node
 from sys import setrecursionlimit
@@ -15,8 +16,9 @@ class SpaceProblemGame:
     currentNode = None
     ai = None
     solution = [[1,2,3],[8,0,4],[7,6,5]] #[[1,2],[3,0]]
+    heuristic = 1
 
-    def __init__(self, w, h, spaces):
+    def __init__(self, w, h, spaces, he):
         board = [[0 for x in range(w)] for y in range(h)]
         random.seed(datetime.now())
         self.setupGame(board, w, h, spaces)
@@ -24,6 +26,7 @@ class SpaceProblemGame:
         self.spaceCount = spaces
         self.width = w
         self.height = h
+        self.heuristic = he
 
     def setAi(self, newAi):
         self.ai = newAi
@@ -225,6 +228,19 @@ class SpaceProblemGame:
     def getHeuristic2(self, node):
         return None
 
+    def getHeuristicAvg(self, node):
+        h1 = self.getHeuristic1(node)
+        h2 = self.getHeuristic2(node)
+        return (h1 + h2) / 2
+
+    def getHeuristic(self, node):
+        if heuristic == 1:
+            return getHeuristic1(node)
+        elif heuristic == 2:
+            return getHeuristic2(node)
+        else:
+            return getHeuristicAvg(node)
+
 if __name__ == "__main__":
     #w = input("Width: ")
     #l = input("Length: ")
@@ -245,5 +261,5 @@ if __name__ == "__main__":
 
 
     #game.setAi(BfsAi(game))
-    game.setAi(DfsAi(game))
+    game.setAi(AsAi(game))
     game.aiGameLoop()

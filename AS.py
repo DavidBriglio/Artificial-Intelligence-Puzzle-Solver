@@ -11,8 +11,9 @@ class AsAi:
     def __init__(self, game):
         self.game = game
         self.openQueue.append(game.currentNode)
-        self.currentNode = deepcopy(game.currentNode)
-        self.winningNode = self.solveProblemNonSlides()
+        self.currentNode = copy.deepcopy(game.currentNode)
+        self.winningNode = self.solveProblem()
+        print(self.winningNode)
         self.makeMoveList()
 
     def makeMove(self):
@@ -24,56 +25,15 @@ class AsAi:
             self.moveList.append(node.action)
             node = node.parent
 
-    def solveProblem(self):
-        if self.openList:
-
-            # Find the most optimal node
-            nextNode = None
-            for key, node in openList.items():
-                if node.cost > nextNode.cost:
-                    nextNode = node
-
-            # Get all children of best node
-            nodes = self.game.expandNodes(nextNode)
-
-            condensed = self.game.getCondensedNode(nextNode)
-
-            # Add node to CLOSE
-            self.closeList[condensed] = nextNode
-
-            # Remove the node from OPEN
-            self.openList.pop(condensed, None)
-
-            #Iterate over children
-            for node in nodes:
-                condensed = self.game.getCondensedNode(node)
-                prevNode = self.openList[condensed]
-                heuristicCost = self.game.getHeuristic1(node)
-                if prevNode == None:
-                    prevNode = self.closeList[condensed]
-
-                # If we have not previously generated the node
-                if prevNode == None:
-                    node.cost = node.depth + heuristicCost
-                    self.openList.append(node)
-                else:
-                    # If the current path is less cost than the previous, update the cost and parent
-                    if prevNode.cost > (node.depth + heuristicCost):
-                        prevNode.code = node.depth + heuristicCost
-                        prevNode.parent = nextNode
-                    #TODO: FINISH
-
-            if self.game.checkGameEnd()
-        return None
-
-
     def solveProblemNonSlides(self):
-        if self.openQueue:
+        while self.openQueue:
 
             #Get lowest cost / remove it from OPEN
-            nextNode = self.openQueue.sort().pop(0)
-
+            self.openQueue.sort()
+            nextNode = self.openQueue.pop(0)
+            #print(nextNode)
             if self.game.checkGameEnd(nextNode):
+                print("A* FOUND SOLUTION.")
                 return nextNode
 
             # Get all children of best node
@@ -85,16 +45,19 @@ class AsAi:
             #Iterate over children
             for node in nodes:
                 prevNode = None
-                if node in openQueue:
-                    prevNode = openQueue[openQueue.index(node)]
-                elif node in closeSet:
-                    setlist = list(closeSet)
+                if node in self.openQueue:
+                    prevNode = self.openQueue[self.openQueue.index(node)]
+                elif node in self.closeSet:
+                    setlist = list(self.closeSet)
                     prevNode = setlist[setlist.index(node)]
+
+                #Get heuristic cost
+                heuristicCost = self.game.getHeuristic(node)
 
                 # If we have not previously generated the node
                 if prevNode == None:
                     node.cost = node.depth + heuristicCost
-                    self.openQueue.add(node)
+                    self.openQueue.append(node)
                 else:
                     # If the current path is less cost than the previous, update the cost and parent
                     if prevNode.cost > (node.depth + heuristicCost):

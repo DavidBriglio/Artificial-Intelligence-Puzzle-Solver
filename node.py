@@ -1,6 +1,5 @@
 import copy
 
-
 class Node:
 
     depth = 0
@@ -17,8 +16,32 @@ class Node:
 		#self.cost = self.depth
 
     def __eq__(self, other):
-        if other != None and str(self.state) == str(other.state):
-            return True
+        if other:
+            return str(self.state) == str(other.state)
+        else:
+            return False
+
+    def __ne__(self, other):
+        return not self.__eq__(other)
+
+    def __le__(self, other):
+        if other != None:
+            return self.cost <= other.cost
+        return False
+
+    def __lt__(self, other):
+        if other != None:
+            return self.cost < other.cost
+        return False
+
+    def __ge__(self, other):
+        if other != None:
+            return self.cost >= other.cost
+        return False
+
+    def __gt__(self, other):
+        if other != None:
+            return self.cost > other.cost
         return False
 
     def __cmp__(self, other):
@@ -28,6 +51,9 @@ class Node:
             return 0
         else:
             return 1
+
+    def __hash__(self):
+        return hash(str(self.state))
 
     def __repr__(self):
         #return str(self.state) + ", " + str(self.depth) + ", " + str(self.action) + ", " + str(self.cost)

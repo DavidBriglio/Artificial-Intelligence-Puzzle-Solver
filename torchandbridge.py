@@ -2,14 +2,17 @@ import copy
 from node import Node
 from BFS import BfsAi
 from DFS import DfsAi
+from AS import AsAi
 
 class BridgeAndTorchGame:
 
     currentNode = None
     ai = None
+    heuristic = 1
 
-    def __init__(self, newPersonSet):
+    def __init__(self, newPersonSet, he):
         self.currentNode = Node({"bridgeSide1":newPersonSet, "bridgeSide2":[], "torchOnSide1":True}, None, None)
+        self.heuristic = he
 
     def setAi(self, newAi):
         self.ai = newAi
@@ -59,6 +62,8 @@ class BridgeAndTorchGame:
     def expandNodes(self, node):
         options = []
         possibleNodes = []
+        node.state["bridgeSide1"].sort()
+        node.state["bridgeSide2"].sort()
         if node.state["torchOnSide1"] == True:
             options = self.getMoves(node.state["bridgeSide1"])
         else:
@@ -109,6 +114,18 @@ class BridgeAndTorchGame:
     def getHeuristic2(self, node):
         return sum(node.state["bridgeSide1"])
 
+    def getHeuristicAvg(self, node):
+        h1 = self.getHeuristic1(node)
+        h2 = self.getHeuristic2(node)
+        return (h1 + h2) / 2
+
+    def getHeuristic(self, node):
+        if heuristic == 1:
+            return getHeuristic1(node)
+        elif heuristic == 2:
+            return getHeuristic2(node)
+        else:
+            return getHeuristicAvg(node)
 
 
 if __name__ == "__main__":
@@ -121,7 +138,9 @@ if __name__ == "__main__":
     # game.printBoard()
     game = BridgeAndTorchGame([1,2,3,4])
     #ame.setAi(BfsAi(game))
-    game.setAi(DfsAi(game))
+    #game.setAi(DfsAi(game))
+    #print(Node([1,2,3], None, None) != None)#== Node([1,2,3],None, None))
+    game.setAi(AsAi(game))
     print("Game Start.")
     game.aiGameLoop()
     # game.userGameLoop()

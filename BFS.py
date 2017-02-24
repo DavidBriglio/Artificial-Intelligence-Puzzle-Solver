@@ -1,6 +1,7 @@
 import copy
 import queue
 
+#TODO: utilize new __eq__ and __cmp__ in node to remove "condensed"
 class BfsAi:
 
     statesVisited = set()

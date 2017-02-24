@@ -1,5 +1,6 @@
 import copy
 
+#TODO: utilize new __eq__ and __cmp__ in node to remove "condensed"
 class DfsAi:
 
     statesVisited = set()
