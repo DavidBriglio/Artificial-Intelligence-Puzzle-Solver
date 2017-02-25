@@ -1,7 +1,6 @@
 import copy
 import queue
 
-#TODO: utilize new __eq__ and __cmp__ in node to remove "condensed"
 class BfsAi:
 
     statesVisited = set()
@@ -42,8 +41,6 @@ class BfsAi:
 
                 # Add each possible move that has not been seen yet to the state queue
                 for move in moves:
-                    condensed = self.game.getCondensedNode(move)
-
-                    if not condensed in self.statesVisited:
-                        self.statesVisited.add(condensed)
+                    if not move in self.statesVisited:
+                        self.statesVisited.add(move)
                         self.stateQueue.put(move)

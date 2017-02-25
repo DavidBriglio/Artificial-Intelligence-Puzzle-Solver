@@ -2,8 +2,6 @@ import copy
 
 class AsAi:
 
-    statesVisitedOpen = set()
-    statesVisitedClosed = set()
     openQueue = []
     closeSet = set()
     moveList = []
@@ -13,7 +11,6 @@ class AsAi:
         self.openQueue.append(game.currentNode)
         self.currentNode = copy.deepcopy(game.currentNode)
         self.winningNode = self.solveProblem()
-        print(self.winningNode)
         self.makeMoveList()
 
     def makeMove(self):

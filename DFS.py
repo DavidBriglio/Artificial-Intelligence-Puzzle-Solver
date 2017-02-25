@@ -11,6 +11,8 @@ class DfsAi:
         self.game = game
         self.stateStack.append(game.currentNode)
         self.winningNode = self.solveProblem()
+        if self.winningNode == None:
+            print("DFS DID NOT FIND A SOLUTION")
         self.makeMoveList()
 
     def makeMove(self):
@@ -38,15 +40,14 @@ class DfsAi:
             else:
                 # Add all unvisited nodes to the stack
                 nodes = self.game.expandNodes(node)
+                
                 for tempNode in nodes:
-                    condensed = self.game.getCondensedNode(tempNode)
-                    if not condensed in self.statesVisited:
+                    if not tempNode in self.statesVisited:
                         self.stateStack.append(tempNode)
-                        self.statesVisited.add(condensed)
+                        self.statesVisited.add(tempNode)
 
                         #Recurse to find the solution
                         solution = self.solveProblem()
                         if solution:
                             return solution
-
         return None

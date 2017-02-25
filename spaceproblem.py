@@ -15,14 +15,14 @@ class SpaceProblemGame:
 
     currentNode = None
     ai = None
-    solution = [[1,2,3],[8,0,4],[7,6,5]] #[[1,2],[3,0]]
+    solution = "1,2,3,8,0,4,7,6,5" #"1,2,3,0"
     heuristic = 1
 
-    def __init__(self, w, h, spaces, he):
+    def __init__(self, w, h, spaces, he=1):
         board = [[0 for x in range(w)] for y in range(h)]
         random.seed(datetime.now())
         self.setupGame(board, w, h, spaces)
-        self.currentNode = Node({"board":board}, None, None)
+        self.currentNode = Node(board, None, None)
         self.spaceCount = spaces
         self.width = w
         self.height = h
@@ -34,7 +34,7 @@ class SpaceProblemGame:
     def checkGameEnd(self, node):
 	    #Initialize the state
 	    #state = [[0 for x in range(self.width)] for y in range(self.height)]
-        return node.state["board"] == self.solution #TODO: put in logic
+        return node.state == self.solution #TODO: put in logic
 
     def setupGame(self, board, width, height, spaceCount):
         numberCount = (width * height) - spaceCount
@@ -57,7 +57,7 @@ class SpaceProblemGame:
 
         #Boolean if the tile selected is a blank tile
         moves = []
-        board = node.state["board"]
+        board = node.state
         if board[row][col] == 0:
             return moves
         height = self.height - 1
@@ -69,7 +69,7 @@ class SpaceProblemGame:
             moves.append([currentTile,[row-1,col+2]])
 
         #knight <<^
-        # if col - 2 >= 0 and row - 1 >= 0 and node.state["board"][row-1][col-2]:
+        # if col - 2 >= 0 and row - 1 >= 0 and node.state[row-1][col-2]:
         #     moves.append([currentTile,[row-1,col-2]])
 
         #knight >>v
@@ -77,7 +77,7 @@ class SpaceProblemGame:
             moves.append([currentTile,[row+1,col+2]])
 
         #knight <<v
-        # if col - 2 >= 0 and row + 1 <= height and node.state["board"][row+1][col-2]:
+        # if col - 2 >= 0 and row + 1 <= height and node.state[row+1][col-2]:
         #     moves.append([currentTile,[row+1,col-2]])
 
         #knight >^^
@@ -105,7 +105,7 @@ class SpaceProblemGame:
         currentTile = None
         height = self.height - 1
         width = self.width - 1
-        board = node.state["board"]
+        board = node.state
 
         for rowIndex in range(0,height + 1):
             for colIndex in range(0,width + 1):
@@ -171,12 +171,12 @@ class SpaceProblemGame:
     #TODO: Check for legality?
     def makeMove(self, node, move):
         index1row, index1col, index2row, index2col = move[0][0], move[0][1], move[1][0], move[1][1]
-        temp = node.state["board"][index1row][index1col]
-        node.state["board"][index1row][index1col] = node.state["board"][index2row][index2col]
-        node.state["board"][index2row][index2col] = temp
+        temp = node.state[index1row][index1col]
+        node.state[index1row][index1col] = node.state[index2row][index2col]
+        node.state[index2row][index2col] = temp
 
     def printBoard(self, node):
-        for row in node.state["board"]:
+        for row in node.state:
             print(row)
 
     def userGameLoop(self):
@@ -208,19 +208,12 @@ class SpaceProblemGame:
                 print("GAME END!")
                 endGame = True
 
-    def getCondensedNode(self, node):
-        returnString = str(node.state["board"])
-        # for rowIndex in range(0, node.state["height"]):
-        #     for colIndex in range(0, node.state["width"]):
-        #         returnString += str(node.state["board"][rowIndex][colIndex])
-        return returnString
-
     #Count the number of tiles that are out of place
     def getHeuristic1(self, node):
         numOff = 0
         for rowIndex in range(0,self.height):
             for colIndex in range(0,self.width):
-                if node.state["board"][rowIndex][colIndex] != self.solution[rowIndex][colIndex]:
+                if node.state[rowIndex][colIndex] != self.solution[rowIndex][colIndex]:
                     numOff += 1
         return numOff
 
@@ -241,12 +234,39 @@ class SpaceProblemGame:
         else:
             return getHeuristicAvg(node)
 
+
+    def flatten(self, state):
+        flatString = ""
+        for row in state:
+            for col in row:
+                flatString += "," + str(col)
+        return flatString[1:]
+
+    def inflate(self, state):
+        newBoard = [[0 for x in range(self.width)] for y in range(self.height)]
+        tiles = state.split(',')
+        row = 0
+        col = 0
+        for tile in tiles:
+            newBoard[row][col] = tile
+            col += 1
+            if col > self.width - 1:
+                row += 1
+                col = 0
+        return newBoard
+
 if __name__ == "__main__":
     #w = input("Width: ")
     #l = input("Length: ")
     #s = input("Spaces: ")
     #game = SpaceProblemGame(w,l,s,None)
     game = SpaceProblemGame(3,3,1)
+
+    flat = game.flatten(game.currentNode.state)
+    infl = game.inflate(flat)
+    print(flat)
+    print(infl)
+
     print("Current Board: ")
     game.printBoard(game.currentNode)
     # nodes = game.expandNodes(game.currentNode)
@@ -261,5 +281,6 @@ if __name__ == "__main__":
 
 
     #game.setAi(BfsAi(game))
-    game.setAi(AsAi(game))
+    #game.setAi(AsAi(game))
+    game.setAi(DfsAi(game))
     game.aiGameLoop()

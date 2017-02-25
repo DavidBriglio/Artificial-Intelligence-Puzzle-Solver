@@ -10,7 +10,7 @@ class BridgeAndTorchGame:
     ai = None
     heuristic = 1
 
-    def __init__(self, newPersonSet, he):
+    def __init__(self, newPersonSet, he=1):
         self.currentNode = Node({"bridgeSide1":newPersonSet, "bridgeSide2":[], "torchOnSide1":True}, None, None)
         self.heuristic = he
 
@@ -90,6 +90,7 @@ class BridgeAndTorchGame:
         print("Side 2: " + str(node.state["bridgeSide2"]))
         print("Torch on Side 1: " + str(node.state["torchOnSide1"]))
 
+'''
     def getCondensedNode(self, node): #TODO: ORDER THESE LISTS
         returnString = "L"
         side = copy.deepcopy(node.state["bridgeSide1"])
@@ -105,7 +106,7 @@ class BridgeAndTorchGame:
         returnString += str(node.state["torchOnSide1"])
 
         return returnString
-
+'''
     #Returns the total number of people on side 1 (total - side 2)
     def getHeuristic1(self, node):
         return len(node.state["bridgeSide1"])
