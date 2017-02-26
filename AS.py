@@ -1,4 +1,5 @@
 import copy
+import datetime
 
 class AsAi:
 
@@ -10,7 +11,9 @@ class AsAi:
         self.game = game
         self.openQueue.append(game.currentNode)
         self.currentNode = copy.deepcopy(game.currentNode)
+        print(datetime.datetime.now().time())
         self.winningNode = self.solveProblem()
+        print(datetime.datetime.now().time())
         self.makeMoveList()
 
     def makeMove(self):
@@ -22,7 +25,7 @@ class AsAi:
             self.moveList.append(node.action)
             node = node.parent
 
-    def solveProblemNonSlides(self):
+    def solveProblem(self):
         while self.openQueue:
 
             #Get lowest cost / remove it from OPEN

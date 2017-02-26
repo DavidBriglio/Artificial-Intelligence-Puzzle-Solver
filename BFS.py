@@ -1,5 +1,6 @@
 import copy
 import queue
+import datetime
 
 class BfsAi:
 
@@ -10,7 +11,9 @@ class BfsAi:
     def __init__(self, game):
         self.game = game
         self.stateQueue.put(game.currentNode)
+        print(datetime.datetime.now().time())
         self.winningNode = self.solveProblem()
+        print(datetime.datetime.now().time())
         self.makeMoveList()
 
     def makeMove(self):

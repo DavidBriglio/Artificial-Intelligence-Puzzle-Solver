@@ -1,6 +1,6 @@
 import copy
+import datetime
 
-#TODO: utilize new __eq__ and __cmp__ in node to remove "condensed"
 class DfsAi:
 
     statesVisited = set()
@@ -10,7 +10,9 @@ class DfsAi:
     def __init__(self, game):
         self.game = game
         self.stateStack.append(game.currentNode)
+        print(datetime.datetime.now().time())
         self.winningNode = self.solveProblem()
+        print(datetime.datetime.now().time())
         if self.winningNode == None:
             print("DFS DID NOT FIND A SOLUTION")
         self.makeMoveList()
@@ -40,7 +42,7 @@ class DfsAi:
             else:
                 # Add all unvisited nodes to the stack
                 nodes = self.game.expandNodes(node)
-                
+
                 for tempNode in nodes:
                     if not tempNode in self.statesVisited:
                         self.stateStack.append(tempNode)
@@ -49,5 +51,6 @@ class DfsAi:
                         #Recurse to find the solution
                         solution = self.solveProblem()
                         if solution:
+                            print("DFS FOUND A SOLUTION!")
                             return solution
         return None

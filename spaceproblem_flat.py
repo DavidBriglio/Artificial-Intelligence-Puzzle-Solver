@@ -75,7 +75,7 @@ class SpaceProblemGame:
         #knight <<v
         # otherIndex = self.pointToIndex(row+1,col-2)
         # if col - 2 >= 0 and row + 1 <= height and node.state[otherIndex] != '0':
-        #     moves.append([index,otherIndex)
+        #     moves.append([index,otherIndex])
 
         #knight >^^
         otherIndex = self.pointToIndex(row-2,col+1)
@@ -233,12 +233,12 @@ class SpaceProblemGame:
         return (h1 + h2) / 2
 
     def getHeuristic(self, node):
-        if heuristic == 1:
-            return getHeuristic1(node)
-        elif heuristic == 2:
-            return getHeuristic2(node)
+        if self.heuristic == 1:
+            return self.getHeuristic1(node)
+        elif self.heuristic == 2:
+            return self.getHeuristic2(node)
         else:
-            return getHeuristicAvg(node)
+            return self.getHeuristicAvg(node)
 
     def flatten(self, state):
         flatString = ""
@@ -280,6 +280,6 @@ if __name__ == "__main__":
 
 
     #game.setAi(BfsAi(game))
-    #game.setAi(AsAi(game))
-    game.setAi(DfsAi(game))
+    game.setAi(AsAi(game))
+    #game.setAi(DfsAi(game))
     game.aiGameLoop()
