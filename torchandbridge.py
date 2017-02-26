@@ -72,6 +72,8 @@ class BridgeAndTorchGame:
         for option in options:
             tempNode = copy.deepcopy(node)
             self.makeMove(tempNode, option[0], option[1])
+            tempNode.state["bridgeSide1"].sort()
+            tempNode.state["bridgeSide2"].sort()
             possibleNodes.append(Node(tempNode.state, option, node))
 
         return possibleNodes
@@ -90,23 +92,6 @@ class BridgeAndTorchGame:
         print("Side 2: " + str(node.state["bridgeSide2"]))
         print("Torch on Side 1: " + str(node.state["torchOnSide1"]))
 
-'''
-    def getCondensedNode(self, node): #TODO: ORDER THESE LISTS
-        returnString = "L"
-        side = copy.deepcopy(node.state["bridgeSide1"])
-        side.sort()
-        for person in side:
-            returnString += str(person)
-        returnString += "R"
-
-        side = copy.deepcopy(node.state["bridgeSide2"])
-        side.sort()
-        for person in side:
-            returnString += str(person)
-        returnString += str(node.state["torchOnSide1"])
-
-        return returnString
-'''
     #Returns the total number of people on side 1 (total - side 2)
     def getHeuristic1(self, node):
         return len(node.state["bridgeSide1"])
@@ -121,12 +106,12 @@ class BridgeAndTorchGame:
         return (h1 + h2) / 2
 
     def getHeuristic(self, node):
-        if heuristic == 1:
-            return getHeuristic1(node)
-        elif heuristic == 2:
-            return getHeuristic2(node)
+        if self.heuristic == 1:
+            return self.getHeuristic1(node)
+        elif self.heuristic == 2:
+            return self.getHeuristic2(node)
         else:
-            return getHeuristicAvg(node)
+            return self.getHeuristicAvg(node)
 
 
 if __name__ == "__main__":
@@ -137,7 +122,7 @@ if __name__ == "__main__":
     #     people.append(person)
     # game = BridgeAndTorchGame(people, None)
     # game.printBoard()
-    game = BridgeAndTorchGame([1,2,3,4])
+    game = BridgeAndTorchGame([1,2,3,4,5,6,7,8])
     #ame.setAi(BfsAi(game))
     #game.setAi(DfsAi(game))
     #print(Node([1,2,3], None, None) != None)#== Node([1,2,3],None, None))
