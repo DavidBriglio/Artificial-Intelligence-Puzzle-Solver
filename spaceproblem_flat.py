@@ -8,33 +8,29 @@ from datetime import datetime
 from node import Node
 from sys import setrecursionlimit
 
-#setrecursionlimit(5000)
-
 #rotate and slice: gridCopy = list(reversed(list(zip(*gridCopy[1:]))))
 #NOTE: When indexing into the game board, use board[row][col]
 class SpaceProblemGame:
 
     currentNode = None
     ai = None
-    solution = "1,2,3,8,0,4,7,6,5" #"1,2,3,0"
     heuristic = 1
+    tileList = []
 
-    def __init__(self, w, h, spaces, he=1):
+    def __init__(self, w, h, spaces, solution, he=1):
         self.width = w
         self.height = h
         board = []
         random.seed(datetime.now())
         self.setupGame(board, w, h, spaces)
         self.currentNode = Node(self.flatten(board), None, None)
+        #self.currentNode = Node(self.flatten([1,2,3,0,4,8,7,6,5]), None, None)
         self.spaceCount = spaces
         self.heuristic = he
+        self.solution = solution
 
     def setAi(self, newAi):
         self.ai = newAi
-
-    #TODO: Implement this logic
-    def getSolution(self):
-        return self.solution
 
     def checkGameEnd(self, node):
         return node.state == self.solution
@@ -46,6 +42,7 @@ class SpaceProblemGame:
         for i in range(spaceCount):
             board.append(str(0))
 
+        self.tileList = copy.deepcopy(board)
         random.shuffle(board)
 
     def getHMovesFromPosition(self, node, moves):
@@ -185,7 +182,6 @@ class SpaceProblemGame:
                 print(line)
                 line = ""
                 count = 0
-        print()
 
     def userGameLoop(self):
         endGame = False
@@ -221,8 +217,9 @@ class SpaceProblemGame:
     def getHeuristic1(self, node):
         numOff = 0
         board = self.inflate(node.state)
+        solution = self.inflate(self.solution)
         for index in range(0,len(board)):
-            if board[index] != self.solution[index]:
+            if board[index] != solution[index]:
                 numOff += 1
         return numOff
 
@@ -260,11 +257,13 @@ class SpaceProblemGame:
         return (index % self.width), math.floor(index / self.width)
 
 if __name__ == "__main__":
-    #w = input("Width: ")
-    #l = input("Length: ")
-    #s = input("Spaces: ")
-    #game = SpaceProblemGame(w,l,s,None)
-    game = SpaceProblemGame(3,3,1)
+    # w = input("Width: ")
+    # l = input("Length: ")
+    # s = input("Spaces: ")
+    # sol = input("Solution: ")
+    # he = input("Heuristic: ")
+    # game = SpaceProblemGame(int(w),int(l),int(s),sol,int(he))
+    game = SpaceProblemGame(3,3,1,"1,2,3,8,0,4,7,6,5",1)
 
     print("Current Board: ")
     game.printBoard(game.currentNode)
@@ -272,14 +271,14 @@ if __name__ == "__main__":
     # for node in nodes:
     #     print("Possible Move: ")
     #     print("MOVE: " + str(node.action))
-    #     print(game.printBoard(node))
+    #     game.printBoard(node)
     #     print()
-
 
     #game.userGameLoop()
     #print(game.getMoves(game.currentNode))
 
-    game.setAi(BfsAi(game))
+    #game.setAi(BfsAi(game))
     #game.setAi(DfsAi(game))
-    #game.setAi(AsAi(game))
+    game.setAi(AsAi(game))
+
     game.aiGameLoop()
