@@ -38,6 +38,7 @@ class DfsAi:
 
             if self.game.checkGameEnd(node):
                 #Solution found!
+                print("DFS FOUND A SOLUTION!")
                 return node
             else:
                 # Add all unvisited nodes to the stack
@@ -51,6 +52,5 @@ class DfsAi:
                         #Recurse to find the solution
                         solution = self.solveProblem()
                         if solution:
-                            print("DFS FOUND A SOLUTION!")
                             return solution
         return None

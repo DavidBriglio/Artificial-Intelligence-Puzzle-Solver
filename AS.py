@@ -31,7 +31,7 @@ class AsAi:
             #Get lowest cost / remove it from OPEN
             self.openQueue.sort()
             nextNode = self.openQueue.pop(0)
-            #print(nextNode)
+
             if self.game.checkGameEnd(nextNode):
                 print("A* FOUND SOLUTION.")
                 return nextNode
@@ -58,6 +58,7 @@ class AsAi:
                 if prevNode == None:
                     node.cost = node.depth + heuristicCost
                     self.openQueue.append(node)
+                    #print(len(self.openQueue))
                 else:
                     # If the current path is less cost than the previous, update the cost and parent
                     if prevNode.cost > (node.depth + heuristicCost):

@@ -223,7 +223,7 @@ class SpaceProblemGame:
                 numOff += 1
         return numOff
 
-    #Sum the distance each tile is out of place
+    #Sum the distance each tile is out of place TODO:Implement
     def getHeuristic2(self, node):
         return None
 
@@ -267,18 +267,11 @@ if __name__ == "__main__":
 
     print("Current Board: ")
     game.printBoard(game.currentNode)
-    # nodes = game.expandNodes(game.currentNode)
-    # for node in nodes:
-    #     print("Possible Move: ")
-    #     print("MOVE: " + str(node.action))
-    #     game.printBoard(node)
-    #     print()
 
     #game.userGameLoop()
-    #print(game.getMoves(game.currentNode))
 
     #game.setAi(BfsAi(game))
-    #game.setAi(DfsAi(game))
-    game.setAi(AsAi(game))
+    game.setAi(DfsAi(game))
+    #game.setAi(AsAi(game))
 
     game.aiGameLoop()
