@@ -32,10 +32,12 @@ class SpaceProblemGame:
     def setAi(self, newAi):
         self.ai = newAi
 
+    #TODO: Implement this logic
+    def getSolution(self):
+        return self.solution
+
     def checkGameEnd(self, node):
-	    #Initialize the state
-	    #state = [[0 for x in range(self.width)] for y in range(self.height)]
-        return node.state == self.solution #TODO: put in logic
+        return node.state == self.solution
 
     def setupGame(self, board, width, height, spaceCount):
         for i in range(1, width * height):
@@ -46,61 +48,58 @@ class SpaceProblemGame:
 
         random.shuffle(board)
 
-    def getHMovesFromPosition(self, node, index):
-
-        #Boolean if the tile selected is a blank tile
-        moves = []
+    def getHMovesFromPosition(self, node, moves):
         board = self.inflate(node.state)
-        if board[index] == '0':
-            return moves
         height = self.height - 1
         width = self.width - 1
-        col, row = self.indexToPoint(index)
 
-        #knight >>^
-        otherIndex = self.pointToIndex(row-1,col+2)
-        if col + 2 <= width and row - 1 >= 0 and board[otherIndex] != '0':
-            moves.append([index,otherIndex])
+        for index in range(0,len(board)):
+            #Check if the current tile is blank
+            if board[index] == '0':
+                continue
+            col, row = self.indexToPoint(index)
 
-        #knight <<^
-        # otherIndex = self.pointToIndex(row-1,col-2)
-        # if col - 2 >= 0 and row - 1 >= 0 and board[otherIndex] != '0':
-        #     moves.append([index,otherIndex])
+            #knight >>^
+            otherIndex = self.pointToIndex(row-1,col+2)
+            if col + 2 <= width and row - 1 >= 0 and board[otherIndex] != '0' and not [index,otherIndex] in moves and not [otherIndex, index] in moves:
+                moves.append([index,otherIndex])
 
-        #knight >>v
-        otherIndex = self.pointToIndex(row+1,col+2)
-        if col + 2 <= width and row + 1 <= height and board[otherIndex] != '0':
-            moves.append([index,otherIndex])
+            #knight <<^
+            otherIndex = self.pointToIndex(row-1,col-2)
+            if col - 2 >= 0 and row - 1 >= 0 and board[otherIndex] != '0' and not [index,otherIndex] in moves and not [otherIndex, index] in moves:
+                moves.append([index,otherIndex])
 
-        #knight <<v
-        # otherIndex = self.pointToIndex(row+1,col-2)
-        # if col - 2 >= 0 and row + 1 <= height and node.state[otherIndex] != '0':
-        #     moves.append([index,otherIndex])
+            #knight >>v
+            otherIndex = self.pointToIndex(row+1,col+2)
+            if col + 2 <= width and row + 1 <= height and board[otherIndex] != '0' and not [index,otherIndex] in moves and not [otherIndex, index] in moves:
+                moves.append([index,otherIndex])
 
-        #knight >^^
-        otherIndex = self.pointToIndex(row-2,col+1)
-        if col + 1 <= width and row - 2 >= 0 and board[otherIndex] != '0':
-            moves.append([index,otherIndex])
+            #knight <<v
+            otherIndex = self.pointToIndex(row+1,col-2)
+            if col - 2 >= 0 and row + 1 <= height and board[otherIndex] != '0' and not [index,otherIndex] in moves and not [otherIndex, index] in moves:
+                moves.append([index,otherIndex])
 
-        #knight <^^
-        otherIndex = self.pointToIndex(row-2,col-1)
-        if col - 1 >= 0 and row - 2 >= 0 and board[otherIndex] != '0':
-            moves.append([index,otherIndex])
+            #knight >^^
+            otherIndex = self.pointToIndex(row-2,col+1)
+            if col + 1 <= width and row - 2 >= 0 and board[otherIndex] != '0' and not [index,otherIndex] in moves and not [otherIndex, index] in moves:
+                moves.append([index,otherIndex])
 
-        #knight >vv
-        otherIndex = self.pointToIndex(row+2,col+1)
-        if col + 1 <= width and row + 2 <= height and board[otherIndex] != '0':
-            moves.append([index,otherIndex])
+            #knight <^^
+            otherIndex = self.pointToIndex(row-2,col-1)
+            if col - 1 >= 0 and row - 2 >= 0 and board[otherIndex] != '0' and not [index,otherIndex] in moves and not [otherIndex, index] in moves:
+                moves.append([index,otherIndex])
 
-        #knight <vv
-        otherIndex = self.pointToIndex(row+2,col-1)
-        if col - 1 >= 0 and row + 2 <= height and board[otherIndex] != '0':
-            moves.append([index,otherIndex])
+            #knight >vv
+            otherIndex = self.pointToIndex(row+2,col+1)
+            if col + 1 <= width and row + 2 <= height and board[otherIndex] != '0' and not [index,otherIndex] in moves and not [otherIndex, index] in moves:
+                moves.append([index,otherIndex])
 
-        return moves
+            #knight <vv
+            otherIndex = self.pointToIndex(row+2,col-1)
+            if col - 1 >= 0 and row + 2 <= height and board[otherIndex] != '0' and not [index,otherIndex] in moves and not [otherIndex, index] in moves:
+                moves.append([index,otherIndex])
 
-    def getZeroMoves(self, node):
-        moves = []
+    def getZeroMoves(self, node, moves):
         height = self.height - 1
         width = self.width - 1
         board = self.inflate(node.state)
@@ -111,39 +110,46 @@ class SpaceProblemGame:
 
         for index in zeros:
             col, row = self.indexToPoint(index)
+
             #left
-            if col - 1 >= 0:
-                moves.append([index,self.pointToIndex(row,col-1)])
+            otherIndex = self.pointToIndex(row,col-1)
+            if col - 1 >= 0 and not [index, otherIndex] in moves and not [otherIndex, index] in moves:
+                moves.append([index,otherIndex])
 
             #right
-            if col + 1 <= width:
-                moves.append([index,self.pointToIndex(row,col+1)])
+            otherIndex = self.pointToIndex(row,col+1)
+            if col + 1 <= width and not [index, otherIndex] in moves and not [otherIndex, index] in moves:
+                moves.append([index,otherIndex])
 
             #up
-            if row - 1 >= 0:
-                moves.append([index,self.pointToIndex(row-1,col)])
+            otherIndex = self.pointToIndex(row-1,col)
+            if row - 1 >= 0 and not [index, otherIndex] in moves and not [otherIndex, index] in moves:
+                moves.append([index,otherIndex])
 
             #down
-            if row + 1 <= height:
-                moves.append([index,self.pointToIndex(row+1,col)])
+            otherIndex = self.pointToIndex(row+1,col)
+            if row + 1 <= height and not [index, otherIndex] in moves and not [otherIndex, index] in moves:
+                moves.append([index,otherIndex])
 
             #up right
-            if row - 1 >= 0 and col + 1 <= width:
-                moves.append([index,self.pointToIndex(row-1,col+1)])
+            otherIndex = self.pointToIndex(row-1,col+1)
+            if row - 1 >= 0 and col + 1 <= width and not [index, otherIndex] in moves and not [otherIndex, index] in moves:
+                moves.append([index,otherIndex])
 
             #up left
-            if col - 1 >= 0 and row - 1 >= 0:
-                moves.append([index,self.pointToIndex(row-1,col-1)])
+            otherIndex = self.pointToIndex(row-1,col-1)
+            if col - 1 >= 0 and row - 1 >= 0 and not [index, otherIndex] in moves and not [otherIndex, index] in moves:
+                moves.append([index,otherIndex])
 
             #down left
-            if col - 1 >= 0 and row + 1 <= height:
-                moves.append([index,self.pointToIndex(row+1,col-1)])
+            otherIndex = self.pointToIndex(row+1,col-1)
+            if col - 1 >= 0 and row + 1 <= height and not [index, otherIndex] in moves and not [otherIndex, index] in moves:
+                moves.append([index,otherIndex])
 
             #down right
-            if col + 1 <= width and row + 1 <= height:
-                moves.append([index,self.pointToIndex(row+1,col+1)])
-
-        return moves
+            otherIndex = self.pointToIndex(row+1,col+1)
+            if col + 1 <= width and row + 1 <= height and not [index, otherIndex] in moves and not [otherIndex, index] in moves:
+                moves.append([index,otherIndex])
 
     def expandNodes(self, node):
         movesets = self.getMoves(node)
@@ -156,13 +162,10 @@ class SpaceProblemGame:
 
     def getMoves(self, node):
         possibleMoves = []
-        possibleMoves.extend(self.getZeroMoves(node))
-        board = self.inflate(node.state)
-        for index in range(0,len(board)):
-            possibleMoves.extend(self.getHMovesFromPosition(node,index))
+        self.getZeroMoves(node, possibleMoves)
+        self.getHMovesFromPosition(node, possibleMoves)
         return possibleMoves
 
-    #TODO: Check for legality?
     def makeMove(self, node, move):
         index1, index2 = move[0], move[1]
         board = self.inflate(node.state)
@@ -262,9 +265,6 @@ if __name__ == "__main__":
     #s = input("Spaces: ")
     #game = SpaceProblemGame(w,l,s,None)
     game = SpaceProblemGame(3,3,1)
-    index = game.pointToIndex(2,1)
-    # print(index)
-    # print(game.indexToPoint(index))
 
     print("Current Board: ")
     game.printBoard(game.currentNode)
@@ -277,9 +277,9 @@ if __name__ == "__main__":
 
 
     #game.userGameLoop()
+    #print(game.getMoves(game.currentNode))
 
-
-    #game.setAi(BfsAi(game))
-    game.setAi(AsAi(game))
+    game.setAi(BfsAi(game))
     #game.setAi(DfsAi(game))
+    #game.setAi(AsAi(game))
     game.aiGameLoop()

@@ -123,10 +123,11 @@ if __name__ == "__main__":
     # game = BridgeAndTorchGame(people, None)
     # game.printBoard()
     game = BridgeAndTorchGame([1,2,3,4,5,6,7,8])
-    #ame.setAi(BfsAi(game))
+
+    #game.setAi(BfsAi(game))
     #game.setAi(DfsAi(game))
-    #print(Node([1,2,3], None, None) != None)#== Node([1,2,3],None, None))
     game.setAi(AsAi(game))
+
     print("Game Start.")
     game.aiGameLoop()
     # game.userGameLoop()
