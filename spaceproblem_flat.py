@@ -213,7 +213,7 @@ class SpaceProblemGame:
                 print("GAME END!")
                 endGame = True
 
-    #Count the number of tiles that are out of place
+    # Count the number of tiles that are out of place
     def getHeuristic1(self, node):
         numOff = 0
         board = self.inflate(node.state)
@@ -223,14 +223,21 @@ class SpaceProblemGame:
                 numOff += 1
         return numOff
 
-    #Sum the distance each tile is out of place TODO:Implement
+    # Get the distance each tile is off
     def getHeuristic2(self, node):
-        return None
+        board = self.inflate(node.state)
+        solution = self.inflate(self.solution)
+        value = 0
+        for index in range(0,len(board)):
+            if board[index] != solution[index]:
+                realIndex = solution.index(board[index])
+                value += abs(realIndex - index)
+        return value
 
     def getHeuristicAvg(self, node):
         h1 = self.getHeuristic1(node)
         h2 = self.getHeuristic2(node)
-        return (h1 + h2) / 2
+        return math.floor((h1 + h2) / 2)
 
     def getHeuristic(self, node):
         if self.heuristic == 1:
@@ -263,7 +270,7 @@ if __name__ == "__main__":
     # sol = input("Solution: ")
     # he = input("Heuristic: ")
     # game = SpaceProblemGame(int(w),int(l),int(s),sol,int(he))
-    game = SpaceProblemGame(3,3,1,"1,2,3,8,0,4,7,6,5",1)
+    game = SpaceProblemGame(3,3,1,"1,2,3,8,0,4,7,6,5",2)
 
     print("Current Board: ")
     game.printBoard(game.currentNode)
@@ -271,7 +278,7 @@ if __name__ == "__main__":
     #game.userGameLoop()
 
     #game.setAi(BfsAi(game))
-    game.setAi(DfsAi(game))
-    #game.setAi(AsAi(game))
+    #game.setAi(DfsAi(game))
+    game.setAi(AsAi(game))
 
     game.aiGameLoop()

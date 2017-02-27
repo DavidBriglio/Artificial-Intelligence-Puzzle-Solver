@@ -1,4 +1,5 @@
 import copy
+import math
 from node import Node
 from BFS import BfsAi
 from DFS import DfsAi
@@ -92,18 +93,19 @@ class BridgeAndTorchGame:
         print("Side 2: " + str(node.state["bridgeSide2"]))
         print("Torch on Side 1: " + str(node.state["torchOnSide1"]))
 
-    #Returns the total number of people on side 1 (total - side 2)
+    # Returns the total number of people on side 1 (total - side 2)
     def getHeuristic1(self, node):
         return len(node.state["bridgeSide1"])
 
-    #Returns the total speed of everyone on side 1 (total - side 2) TODO: Change this heuristic
+    # Returns the total speed of everyone on side 1 (total - side 2)
     def getHeuristic2(self, node):
         return sum(node.state["bridgeSide1"])
 
+    # Get the average of the two heuristics
     def getHeuristicAvg(self, node):
         h1 = self.getHeuristic1(node)
         h2 = self.getHeuristic2(node)
-        return (h1 + h2) / 2
+        return math.floor((h1 + h2) / 2)
 
     def getHeuristic(self, node):
         if self.heuristic == 1:
@@ -122,7 +124,7 @@ if __name__ == "__main__":
     #     people.append(person)
     # game = BridgeAndTorchGame(people, None)
     # game.printBoard()
-    game = BridgeAndTorchGame([1,2,3,4,5,6,7,8])
+    game = BridgeAndTorchGame([1,2,3,4,5,6,7,8], 3)
 
     #game.setAi(BfsAi(game))
     #game.setAi(DfsAi(game))
