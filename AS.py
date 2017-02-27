@@ -8,6 +8,7 @@ class AsAi:
     moveList = []
 
     def __init__(self, game):
+        print("A* SEARCH")
         self.game = game
         self.openQueue.append(game.currentNode)
         self.currentNode = copy.deepcopy(game.currentNode)

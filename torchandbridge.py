@@ -117,19 +117,26 @@ class BridgeAndTorchGame:
 
 
 if __name__ == "__main__":
-    # personLength = int(input("Number of People: "))
-    # people = []
-    # for index in range(personLength):
-    #     person = int(input("Person " + str(index+1) + ": "))
-    #     people.append(person)
-    # game = BridgeAndTorchGame(people, None)
-    # game.printBoard()
-    game = BridgeAndTorchGame([1,2,3,4,5,6,7,8], 3)
+    side = input("Input People: ")
+    ai = input("AI: ")
+    if ai == "as":
+        he = input("Heuristic: ")
+    game = BridgeAndTorchGame(side.split(","), int(he))
+    # game = BridgeAndTorchGame([1,2,3,4,5,6,7,8], 3)
 
-    #game.setAi(BfsAi(game))
-    #game.setAi(DfsAi(game))
-    game.setAi(AsAi(game))
+    print()
+    print("Current Board: ")
+    game.printBoard(game.currentNode)
+    print()
 
-    print("Game Start.")
-    game.aiGameLoop()
-    # game.userGameLoop()
+    if ai == "bfs":
+        game.setAi(BfsAi(game))
+        game.aiGameLoop()
+    elif ai == "dfs":
+        game.setAi(DfsAi(game))
+        game.aiGameLoop()
+    elif ai == "as":
+        game.setAi(AsAi(game))
+        game.aiGameLoop()
+    else:
+        game.userGameLoop()

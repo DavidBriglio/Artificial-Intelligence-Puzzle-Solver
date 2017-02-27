@@ -36,7 +36,7 @@ class SpaceProblemGame:
         return node.state == self.solution
 
     def setupGame(self, board, width, height, spaceCount):
-        for i in range(1, width * height):
+        for i in range(1, (width * height) - spaceCount + 1):
             board.append(str(i))
 
         for i in range(spaceCount):
@@ -229,6 +229,7 @@ class SpaceProblemGame:
         solution = self.inflate(self.solution)
         value = 0
         for index in range(0,len(board)):
+            print(index)
             if board[index] != solution[index]:
                 realIndex = solution.index(board[index])
                 value += abs(realIndex - index)
@@ -264,21 +265,29 @@ class SpaceProblemGame:
         return (index % self.width), math.floor(index / self.width)
 
 if __name__ == "__main__":
-    # w = input("Width: ")
-    # l = input("Length: ")
-    # s = input("Spaces: ")
-    # sol = input("Solution: ")
-    # he = input("Heuristic: ")
-    # game = SpaceProblemGame(int(w),int(l),int(s),sol,int(he))
-    game = SpaceProblemGame(3,3,1,"1,2,3,8,0,4,7,6,5",2)
+    w = input("Width: ")
+    l = input("Length: ")
+    s = input("Spaces: ")
+    sol = input("Solution: ")
+    ai = input("AI: ")
+    if ai == "as":
+        he = input("Heuristic: ")
+    game = SpaceProblemGame(int(w),int(l),int(s),sol,int(he))
+    # game = SpaceProblemGame(3,3,1,"1,2,3,8,0,4,7,6,5",2)
 
+    print()
     print("Current Board: ")
     game.printBoard(game.currentNode)
+    print()
 
-    #game.userGameLoop()
-
-    #game.setAi(BfsAi(game))
-    #game.setAi(DfsAi(game))
-    game.setAi(AsAi(game))
-
-    game.aiGameLoop()
+    if ai == "bfs":
+        game.setAi(BfsAi(game))
+        game.aiGameLoop()
+    elif ai == "dfs":
+        game.setAi(DfsAi(game))
+        game.aiGameLoop()
+    elif ai == "as":
+        game.setAi(AsAi(game))
+        game.aiGameLoop()
+    else:
+        game.userGameLoop()

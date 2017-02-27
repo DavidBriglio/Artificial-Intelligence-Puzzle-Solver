@@ -8,6 +8,7 @@ class DfsAi:
     moveList = []
 
     def __init__(self, game):
+        print("DFS SEARCH")
         self.game = game
         self.stateStack.append(game.currentNode)
         print(datetime.datetime.now().time())

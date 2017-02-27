@@ -9,6 +9,7 @@ class BfsAi:
     moveList = []
 
     def __init__(self, game):
+        print("BFS SEARCH")
         self.game = game
         self.stateQueue.put(game.currentNode)
         print(datetime.datetime.now().time())
