@@ -121,12 +121,11 @@ if __name__ == "__main__":
     ai = input("AI: ")
     if ai == "as":
         he = input("Heuristic: ")
-    game = BridgeAndTorchGame(side.split(","), int(he))
-    # game = BridgeAndTorchGame([1,2,3,4,5,6,7,8], 3)
+    game = BridgeAndTorchGame([int(n) for n in side.split(",")], int(he))
 
     print()
     print("Current Board: ")
-    game.printBoard(game.currentNode)
+    game.printState(game.currentNode)
     print()
 
     if ai == "bfs":

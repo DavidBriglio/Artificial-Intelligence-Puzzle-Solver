@@ -24,7 +24,6 @@ class SpaceProblemGame:
         random.seed(datetime.now())
         self.setupGame(board, w, h, spaces)
         self.currentNode = Node(self.flatten(board), None, None)
-        #self.currentNode = Node(self.flatten([1,2,3,0,4,8,7,6,5]), None, None)
         self.spaceCount = spaces
         self.heuristic = he
         self.solution = solution
@@ -229,7 +228,6 @@ class SpaceProblemGame:
         solution = self.inflate(self.solution)
         value = 0
         for index in range(0,len(board)):
-            print(index)
             if board[index] != solution[index]:
                 realIndex = solution.index(board[index])
                 value += abs(realIndex - index)
