@@ -35,18 +35,11 @@ class BridgeAndTorchGame:
         if moveMade:
             node.state["torchOnSide1"] = node.state["torchOnSide1"] == False
 
-        #node.state["bridgeSide1"] = side if node.state["bridgeSide1"] else side2
-        #node.state["bridgeSide2"] = side2 if node.state["bridgeSide2"] else side
-
-
     def aiGameLoop(self):
         endGame = False
         while endGame == False:
             print("\nAsking AI for move.")
             move = self.ai.makeMove()
-            # if move == None:
-            #     print("AI found no solution.")
-            #     endGame = True
             if move != None:
                 print("AI move:")
                 print("MOVE: " + str(move))
@@ -55,6 +48,7 @@ class BridgeAndTorchGame:
                 self.printState(self.currentNode)
                 endGame = self.checkGameEnd(self.currentNode)
             if endGame:
+                print()
                 print("Game End.")
 
     def checkGameEnd(self, node):
@@ -119,6 +113,7 @@ class BridgeAndTorchGame:
 if __name__ == "__main__":
     side = input("Input People: ")
     ai = input("AI: ")
+    he = 1
     if ai == "as":
         he = input("Heuristic: ")
     game = BridgeAndTorchGame([int(n) for n in side.split(",")], int(he))

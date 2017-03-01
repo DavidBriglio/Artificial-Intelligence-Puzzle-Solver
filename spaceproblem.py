@@ -8,7 +8,6 @@ from datetime import datetime
 from node import Node
 from sys import setrecursionlimit
 
-#rotate and slice: gridCopy = list(reversed(list(zip(*gridCopy[1:]))))
 #NOTE: When indexing into the game board, use board[row][col]
 class SpaceProblemGame:
 
@@ -212,6 +211,7 @@ class SpaceProblemGame:
             print("Move: " + str(self.indexToPoint(action[0])) + " - " + str(self.indexToPoint(action[1])))
             self.printBoard(self.currentNode)
             if self.checkGameEnd(self.currentNode):
+                print()
                 print("GAME END!")
                 endGame = True
 
@@ -271,6 +271,7 @@ if __name__ == "__main__":
     s = input("Spaces: ")
     sol = input("Solution: ")
     ai = input("AI: ")
+    he = 1
     if ai == "as":
         he = input("Heuristic: ")
     state = input("Starting State: ")

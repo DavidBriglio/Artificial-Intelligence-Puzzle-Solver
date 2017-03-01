@@ -34,7 +34,6 @@ class DfsAi:
 
             if node.depth >= 30:
                 #Do not continue past depth 30
-                #print("MAX REACHED")
                 return None
 
             if self.game.checkGameEnd(node):
