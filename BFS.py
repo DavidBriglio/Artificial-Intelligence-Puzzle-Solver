@@ -1,3 +1,9 @@
+'''
+Created by David Briglio, February 2017.
+BFS.py
+This file contains the breadth-First-Search algorithm.
+'''
+
 import copy
 import queue
 import datetime

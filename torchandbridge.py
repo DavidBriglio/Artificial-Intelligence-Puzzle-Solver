@@ -1,3 +1,10 @@
+'''
+Created by David Briglio, February 2017.
+torchandbridge.py
+This file contains the torch/bridge puzzle. The full outline of the problem is
+within the 'Assignment.pdf' file.
+'''
+
 import copy
 import math
 from node import Node
@@ -51,9 +58,11 @@ class BridgeAndTorchGame:
                 print()
                 print("Game End.")
 
+    # Return a boolean check if the node is the end node
     def checkGameEnd(self, node):
         return node.state["bridgeSide1"] == []
 
+    # Get all possible children of the current node
     def expandNodes(self, node):
         options = []
         possibleNodes = []
@@ -87,11 +96,11 @@ class BridgeAndTorchGame:
         print("Side 2: " + str(node.state["bridgeSide2"]))
         print("Torch on Side 1: " + str(node.state["torchOnSide1"]))
 
-    # Returns the total number of people on side 1 (total - side 2)
+    # Returns the total number of people on side 1
     def getHeuristic1(self, node):
         return len(node.state["bridgeSide1"])
 
-    # Returns the total speed of everyone on side 1 (total - side 2)
+    # Returns the total speed of everyone on side 1
     def getHeuristic2(self, node):
         return sum(node.state["bridgeSide1"])
 
@@ -101,6 +110,7 @@ class BridgeAndTorchGame:
         h2 = self.getHeuristic2(node)
         return math.floor((h1 + h2) / 2)
 
+    # Returns the value of the heuristic selected
     def getHeuristic(self, node):
         if self.heuristic == 1:
             return self.getHeuristic1(node)

@@ -1,3 +1,9 @@
+'''
+Created by David Briglio, February 2017.
+DFS.py
+This file contains the Depth-First-Search algorithm.
+'''
+
 import copy
 import datetime
 

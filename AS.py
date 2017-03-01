@@ -1,3 +1,10 @@
+'''
+Created by David Briglio, February 2017.
+AS.py
+This file contains the A* algorithm.
+'''
+
+
 import copy
 import datetime
 

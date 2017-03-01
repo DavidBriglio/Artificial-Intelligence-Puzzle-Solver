@@ -1,3 +1,10 @@
+'''
+Created by David Briglio, February 2017.
+spaceproblem.py
+This file contains the tile / space puzzle. The full outline of the problem is
+within the 'Assignment.pdf' file.
+'''
+
 import random
 import copy
 import math
